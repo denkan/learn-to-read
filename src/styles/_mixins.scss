@@ -1,0 +1,227 @@
+@use "sass:map";
+@use "@angular/material" as mat;
+
+@mixin flex-fill {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+}
+
+@mixin full-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+}
+
+@function get-color-map($mat-theme) {
+  $color-config: mat.get-color-config($mat-theme);
+  $is-dark: map.get($color-config, "is-dark");
+  $primary-palette: mat.get-color-from-palette($color-config, "primary");
+  $accent-palette: map.get($color-config, "accent");
+  $warn-palette: map.get($color-config, "warn");
+  $background-palette: map.get($color-config, "background");
+  $foreground-palette: map.get($color-config, "foreground");
+
+  $background-base: map.get($background-palette, "background");
+  $foreground-base: map.get($foreground-palette, "base");
+  $primary: mat.get-color-from-palette($primary-palette, 500);
+  $primary-contrast: mat.get-color-from-palette(
+    $primary-palette,
+    "500-contrast"
+  );
+  $accent: mat.get-color-from-palette($accent-palette, 500);
+  $accent-contrast: mat.get-color-from-palette($accent-palette, "500-contrast");
+  $warn: mat.get-color-from-palette($warn-palette);
+
+  $background-base-op: if($is-dark, black, white);
+  $foreground-base-op: if($is-dark, white, black);
+  $dark: black;
+  $light: white;
+
+  $colors: (
+    "transparent": transparent,
+    "currentColor": currentColor,
+    "bg": $background-base,
+    "bg-dark-1": darken($background-base, 2.5%),
+    "bg-dark-2": darken($background-base, 5%),
+    "bg-dark-3": darken($background-base, 10%),
+    "bg-light-1": lighten($background-base, 2.5%),
+    "bg-light-2": lighten($background-base, 5%),
+    "bg-light-3": lighten($background-base, 10%),
+    "bg-op-5": rgba($background-base-op, 0.05),
+    "bg-op-10": rgba($background-base-op, 0.1),
+    "bg-op-25": rgba($background-base-op, 0.25),
+    "bg-op-50": rgba($background-base-op, 0.5),
+    "bg-op-75": rgba($background-base-op, 0.75),
+    "fg": $foreground-base,
+    "fg-dark-1": darken($foreground-base, 2.5%),
+    "fg-dark-2": darken($foreground-base, 5%),
+    "fg-dark-3": darken($foreground-base, 10%),
+    "fg-light-1": lighten($foreground-base, 2.5%),
+    "fg-light-2": lighten($foreground-base, 5%),
+    "fg-light-3": lighten($foreground-base, 10%),
+    "fg-op-5": rgba($foreground-base-op, 0.05),
+    "fg-op-10": rgba($foreground-base-op, 0.1),
+    "fg-op-25": rgba($foreground-base-op, 0.25),
+    "fg-op-50": rgba($foreground-base-op, 0.5),
+    "fg-op-75": rgba($foreground-base-op, 0.75),
+    "dark-op-5": rgba($dark, 0.05),
+    "dark-op-10": rgba($dark, 0.1),
+    "dark-op-25": rgba($dark, 0.25),
+    "dark-op-50": rgba($dark, 0.5),
+    "dark-op-75": rgba($dark, 0.75),
+    "light-op-5": rgba($light, 0.05),
+    "light-op-10": rgba($light, 0.1),
+    "light-op-25": rgba($light, 0.25),
+    "light-op-50": rgba($light, 0.5),
+    "light-op-75": rgba($light, 0.75),
+    "text-base": map.get($foreground-palette, "text"),
+    "primary": $primary,
+    "primary-contrast": $primary-contrast,
+    "accent": $accent,
+    "accent-contrast": $accent-contrast,
+    "warn": $warn,
+    "divider": map.get($foreground-palette, "divider"),
+  );
+  @return $colors;
+}
+
+@mixin color-vars($mat-theme) {
+  $colors: get-color-map($mat-theme);
+  @each $name, $color in $colors {
+    --color-#{$name}: #{$color};
+  }
+}
+@mixin color-helpers($mat-theme) {
+  @each $name, $color in get-color-map($mat-theme) {
+    .text-#{$name} {
+      color: var(--color-#{$name}) !important;
+    }
+    .bg-#{$name} {
+      background-color: var(--color-#{$name}) !important;
+    }
+  }
+}
+
+@function get-margin-padding-map() {
+  @return (
+    "025": 0.25em,
+    "05": 0.5em,
+    "075": 0.75em,
+    "1": 1em,
+    "2": 2em,
+    "3": 3em,
+    "4": 4em,
+    "5": 5em,
+    "10": 10em,
+    "5p": 5%,
+    "10p": 10%,
+    "25p": 25%,
+    "50p": 25%,
+    "auto": auto
+  );
+}
+@mixin margin-padding-vars {
+  $vars: get-margin-padding-map();
+  @each $name, $size in $vars {
+    --margin-#{$name}: #{$size};
+  }
+  @each $name, $size in $vars {
+    --padding-#{$name}: #{$size};
+  }
+}
+@mixin margin-padding-helpers {
+  @each $name, $size in get-margin-padding-map() {
+    .p-#{$name} {
+      padding: var(--padding-#{$name}) !important;
+    }
+    .px-#{$name} {
+      padding-left: var(--padding-#{$name}) !important;
+      padding-right: var(--padding-#{$name}) !important;
+    }
+    .py-#{$name} {
+      padding-top: var(--padding-#{$name}) !important;
+      padding-bottom: var(--padding-#{$name}) !important;
+    }
+    .pt-#{$name} {
+      padding-top: var(--padding-#{$name}) !important;
+    }
+    .pb-#{$name} {
+      padding-bottom: var(--padding-#{$name}) !important;
+    }
+    .pl-#{$name} {
+      padding-left: var(--padding-#{$name}) !important;
+    }
+    .pr-#{$name} {
+      padding-right: var(--padding-#{$name}) !important;
+    }
+    .m-#{$name} {
+      margin: var(--margin-#{$name}) !important;
+    }
+    .mx-#{$name} {
+      margin-left: var(--margin-#{$name}) !important;
+      margin-right: var(--margin-#{$name}) !important;
+    }
+    .my-#{$name} {
+      margin-top: var(--margin-#{$name}) !important;
+      margin-bottom: var(--margin-#{$name}) !important;
+    }
+    .mt-#{$name} {
+      margin-top: var(--margin-#{$name}) !important;
+    }
+    .mb-#{$name} {
+      margin-bottom: var(--margin-#{$name}) !important;
+    }
+    .ml-#{$name} {
+      margin-left: var(--margin-#{$name}) !important;
+    }
+    .mr-#{$name} {
+      margin-right: var(--margin-#{$name}) !important;
+    }
+  }
+}
+
+@function get-font-size-map() {
+  @return (
+    "1em": 1em,
+    "90p": 90%,
+    "80p": 80%,
+    "70p": 70%,
+    "60p": 60%,
+    "50p": 50%,
+    "110p": 110%,
+    "120p": 120%,
+    "125p": 125%,
+    "150p": 150%,
+    "200p": 200%
+  );
+}
+@mixin font-size-helpers {
+  @each $name, $size in get-font-size-map() {
+    .ts-#{$name} {
+      font-size: $size !important;
+    }
+  }
+}
+
+@function get-display-map() {
+  @return (
+    "inline": inline,
+    "inline-block": inline-block,
+    "inline-flex": inline-flex,
+    "flex": flex,
+    "block": block,
+    "none": none
+  );
+}
+@mixin display-helpers {
+  @each $name, $display in get-display-map() {
+    .d-#{$name} {
+      display: $display !important;
+    }
+  }
+}

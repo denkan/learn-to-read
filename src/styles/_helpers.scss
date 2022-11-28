@@ -1,0 +1,60 @@
+@include color-helpers($default-theme);
+@include margin-padding-helpers;
+@include font-size-helpers;
+@include display-helpers;
+
+.full-fill {
+  @include full-fill;
+}
+.flex-fill {
+  @include flex-fill;
+}
+.flex-center {
+  @include flex-fill;
+  justify-content: center !important;
+  align-items: center !important;
+}
+.flex-row {
+  @include flex-fill;
+  flex-direction: row !important;
+}
+.flex-align-center {
+  align-items: center !important;
+}
+.flex-justify-center {
+  justify-content: center !important;
+}
+
+.pos-relative {
+  position: relative !important;
+}
+
+.text-upper {
+  text-transform: uppercase !important;
+}
+.text-ellipsis {
+  text-overflow: ellipsis !important;
+  white-space: nowrap;
+  max-width: 100%;
+  overflow: hidden;
+}
+.ts {
+  font-size: 1em;
+}
+.lh-100 {
+  line-height: 1;
+}
+
+.overflow-hidden {
+  overflow: hidden !important;
+}
+.overflow-auto {
+  overflow: auto !important;
+}
+
+.no-select {
+  user-select: none;
+}
+.do-select {
+  user-select: text;
+}

@@ -1,8 +1,12 @@
-<div class="main-wrapper flex-fill full-fill bg-bg-op-10">
-  <div class="box new" matRipple>
+<div class="wrapper flex-fill full-fill bg-op-5">
+  <a class="box new" matRipple routerLink="new">
     <b>+</b>
-  </div>
-  <div class="box" matRipple>
-    <b>My word set title</b>
-  </div>
+  </a>
+  <ng-container *ngFor="let ws of store.wordSets$ | async; let index = index">
+    <a class="box" matRipple [routerLink]="['edit', index]">
+      <b>{{ ws.title }}</b>
+    </a>
+  </ng-container>
 </div>
+
+<router-outlet></router-outlet>

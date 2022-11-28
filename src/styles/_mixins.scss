@@ -225,3 +225,10 @@
     }
   }
 }
+
+@mixin border-box {
+  background: white;
+  border-radius: 1em;
+  box-shadow: 0 0 1em var(--color-dark-op-25);
+  border: 3px solid var(--color-dark-op-50);
+}

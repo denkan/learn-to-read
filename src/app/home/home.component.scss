@@ -1,4 +1,6 @@
-.main-wrapper {
+@import "mixins";
+
+.wrapper {
   background: rgba(black, 0.1);
   display: flex;
   flex-direction: row;
@@ -7,17 +9,16 @@
 
 .box {
   width: calc(25% - 2em);
+  min-width: 8em;
+  @include border-box;
   height: 6em;
-  background: white;
-  border-radius: 1em;
-  box-shadow: 0 0 1em rgba(black, 0.25);
-  border: 3px solid rgba(black, 0.5);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   margin: 1em;
   padding: 1em;
+  text-decoration: none;
 
   &:hover {
     border-color: rgba(black, 0.75);

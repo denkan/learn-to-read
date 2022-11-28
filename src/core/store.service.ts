@@ -1,14 +1,13 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, debounceTime } from 'rxjs';
+import { BehaviorSubject, debounceTime, map } from 'rxjs';
 
-interface Store {
+export interface Store {
   wordSets: WordSet[];
 }
 
-interface WordSet {
+export interface WordSet {
   title: string;
   words: string[];
-  color?: string;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -23,8 +22,10 @@ export class StoreService {
   }
 
   get data() {
-    return this.data$;
+    return this.data$.value;
   }
+
+  readonly wordSets$ = this.data$.pipe(map((data) => data.wordSets));
 
   patch(partialData: Partial<Store>) {
     const newData = { ...this.data$.value, ...(partialData || {}) };

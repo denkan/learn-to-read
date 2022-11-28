@@ -1,0 +1,48 @@
+<div class="wrapper full-fill flex-fill flex-center bg-dark-op-50">
+  <form class="border-box p-1" [formGroup]="form" (ngSubmit)="onSubmit()">
+    <h1 class="ts-150p flex-center">
+      {{ isEditing ? "Edit word set" : "Create new word set" }}
+    </h1>
+    <mat-form-field appearance="outline" class="w-100 ts-120p">
+      <mat-label>Title</mat-label>
+      <input matInput formControlName="title" autofocus />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-100 ts-120p">
+      <mat-label>Words to learn</mat-label>
+      <mat-chip-grid #chipGrid aria-label="Enter words">
+        <mat-chip-row
+          *ngFor="let word of form.value.words"
+          (removed)="removeWord(word)"
+        >
+          {{ word }}
+          <button matChipRemove [attr.aria-label]="'remove ' + word">
+            <mat-icon>cancel</mat-icon>
+          </button>
+        </mat-chip-row>
+        <input
+          placeholder="Add word..."
+          [matChipInputFor]="chipGrid"
+          [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+          [matChipInputAddOnBlur]="true"
+          (matChipInputTokenEnd)="addWord($event)"
+        />
+      </mat-chip-grid>
+    </mat-form-field>
+
+    <hr />
+    <div class="flex-center">
+      <button
+        type="submit"
+        mat-raised-button
+        color="primary"
+        [disabled]="form.invalid"
+        class=""
+      >
+        <strong class="text-upper">
+          {{ isEditing ? "Save" : "Create" }}
+        </strong>
+      </button>
+    </div>
+  </form>
+</div>

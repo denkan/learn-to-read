@@ -58,3 +58,11 @@
 .do-select {
   user-select: text;
 }
+
+.border-box {
+  @include border-box;
+}
+
+.w-100 {
+  width: 100%;
+}

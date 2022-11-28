@@ -1,24 +1,21 @@
-import { Component, NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule, Routes } from '@angular/router';
 
 import { AppComponent } from './app.component';
-import { HomeComponent } from './home/home.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CoreModule } from 'src/core/core.module';
 
 const routes: Routes = [
-  { path: '', component: HomeComponent, pathMatch: 'full' },
+  {
+    path: 'home',
+    loadChildren: () => import('./home/home.module').then((m) => m.HomeModule),
+  },
+  { path: '**', redirectTo: 'home' },
 ];
 
 @NgModule({
-  imports: [
-    RouterModule.forRoot(routes),
-    BrowserModule,
-    BrowserAnimationsModule,
-    CoreModule,
-  ],
-  declarations: [AppComponent, HomeComponent],
+  imports: [RouterModule.forRoot(routes), BrowserModule, CoreModule],
+  declarations: [AppComponent],
   providers: [],
   bootstrap: [AppComponent],
 })

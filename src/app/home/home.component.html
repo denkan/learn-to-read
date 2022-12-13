@@ -1,11 +1,23 @@
-<div class="wrapper flex-fill full-fill bg-op-5">
-  <a class="box new" matRipple routerLink="new">
+<div
+  class="wrapper flex-fill full-fill bg-op-5"
+  [class.edit-mode]="editMode"
+  [class.disable-click]="clickDisabled"
+  (click)="editMode && setEditMode(false)"
+>
+  <div class="box new" matRipple (click)="gotoLink('new')">
     <b>+</b>
-  </a>
+  </div>
   <ng-container *ngFor="let ws of store.wordSets$ | async; let index = index">
-    <a class="box" matRipple [routerLink]="['edit', index]">
+    <div
+      class="box"
+      matRipple
+      (click)="gotoLink(['/game', index])"
+      (longpress)="setEditMode(true)"
+      (longpressEnd)="enableClick()"
+      [style.animation-delay]="-((index % 4) * 0.2) + 's'"
+    >
       <b>{{ ws.title }}</b>
-    </a>
+    </div>
   </ng-container>
 </div>
 

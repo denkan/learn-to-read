@@ -16,6 +16,8 @@ html {
 }
 body {
   font-size: 1em;
+  user-select: none;
+  -webkit-user-drag: none;
 }
 
 * {

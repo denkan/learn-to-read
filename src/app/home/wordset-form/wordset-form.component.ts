@@ -54,7 +54,7 @@ export class WordsetFormComponent {
   }
 
   addWord(e: MatChipInputEvent) {
-    const newWord = e.value?.trim();
+    const newWord = e.value?.trim()?.toLocaleLowerCase();
     if (!!newWord) {
       const words = [...(this.form.value.words || [])];
       words.push(newWord);

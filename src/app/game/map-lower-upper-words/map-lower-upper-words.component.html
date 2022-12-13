@@ -1,0 +1,34 @@
+<div *ngIf="$$ | async as $" cdkDropListGroup class="wrapper full-fill bg-op-5">
+  <main class="flex-fill flex-align-center flex-justify-center" cdkDropList>
+    <div class="p-1" *ngIf="$.currWord">
+      <app-word
+        class="px-1 ts-120p"
+        bgColor="lightskyblue"
+        cdkDrag
+        [cdkDragData]="$.currWord"
+        (cdkDragDropped)="onDragDrop($event)"
+      >
+        {{ formatWord($.currWord, true) }}
+      </app-word>
+    </div>
+  </main>
+  <aside>
+    <div
+      *ngFor="let ws of $.wordsStatus; trackBy: trackByWord"
+      cdkDropList
+      [cdkDropListDisabled]="ws.done"
+      [cdkDropListData]="ws"
+      (cdkDropListEntered)="onDragEnter($event)"
+      (cdkDropListExited)="reset()"
+    >
+      <app-word
+        [bgColor]="ws.done ? 'palegreen' : 'lightyellow'"
+        [class.opacity-50]="ws.done"
+      >
+        {{ formatWord(ws.word, false) }}:{{
+          wordState(ws, $.hoveredWord, $.wrongWord)
+        }}
+      </app-word>
+    </div>
+  </aside>
+</div>

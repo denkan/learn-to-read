@@ -208,6 +208,28 @@
   }
 }
 
+@function get-opacity-map() {
+  @return (
+    "10": 0.1,
+    "20": 0.2,
+    "30": 0.3,
+    "40": 0.4,
+    "50": 0.5,
+    "60": 0.6,
+    "70": 0.7,
+    "80": 0.8,
+    "90": 0.9,
+    "100": 1
+  );
+}
+@mixin opacity-helpers {
+  @each $name, $value in get-opacity-map() {
+    .opacity-#{$name} {
+      opacity: $value !important;
+    }
+  }
+}
+
 @function get-display-map() {
   @return (
     "inline": inline,

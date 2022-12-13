@@ -1,6 +1,7 @@
 @include color-helpers($default-theme);
 @include margin-padding-helpers;
 @include font-size-helpers;
+@include opacity-helpers;
 @include display-helpers;
 
 .full-fill {
@@ -23,6 +24,9 @@
 }
 .flex-justify-center {
   justify-content: center !important;
+}
+.flex-justify-evenly {
+  justify-content: space-evenly !important;
 }
 
 .pos-relative {

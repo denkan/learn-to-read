@@ -4,7 +4,12 @@
   background: rgba(black, 0.1);
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   padding: 2em;
+
+  &.disable-click {
+    pointer-events: none;
+  }
 }
 
 .box {
@@ -31,5 +36,29 @@
     b {
       font-size: 300%;
     }
+  }
+}
+
+.wrapper.edit-mode {
+  .box {
+    animation: wobble 0.3s infinite linear;
+
+    &.new {
+      animation: none;
+    }
+  }
+}
+
+@keyframes wobble {
+  0%,
+  50%,
+  100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-3deg);
+  }
+  75% {
+    transform: rotate(3deg);
   }
 }

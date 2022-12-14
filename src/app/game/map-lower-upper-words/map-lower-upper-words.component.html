@@ -2,8 +2,8 @@
   <main class="flex-fill flex-align-center flex-justify-center" cdkDropList>
     <div class="p-1" *ngIf="$.currWord">
       <app-word
-        class="px-1 ts-120p"
-        bgColor="lightskyblue"
+        bgcolor="lightskyblue"
+        innerClass="px-1 ts-120p"
         cdkDrag
         [cdkDragData]="$.currWord"
         (cdkDragDropped)="onDragDrop($event)"
@@ -21,13 +21,8 @@
       (cdkDropListEntered)="onDragEnter($event)"
       (cdkDropListExited)="reset()"
     >
-      <app-word
-        [bgColor]="ws.done ? 'palegreen' : 'lightyellow'"
-        [class.opacity-50]="ws.done"
-      >
-        {{ formatWord(ws.word, false) }}:{{
-          wordState(ws, $.hoveredWord, $.wrongWord)
-        }}
+      <app-word [state]="wordState(ws, $.hoveredWord, $.wrongWord)">
+        {{ formatWord(ws.word, false) }}
       </app-word>
     </div>
   </aside>

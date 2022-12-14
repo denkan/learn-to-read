@@ -2,13 +2,7 @@ import { CdkDragDrop, CdkDragEnter } from '@angular/cdk/drag-drop';
 import { Component } from '@angular/core';
 import { BehaviorSubject, combineLatest, map, Observable } from 'rxjs';
 import { GameService } from '../game.service';
-
-enum WordState {
-  Idle = 'idle',
-  Hover = 'hover',
-  Wrong = 'wrong',
-  Correct = 'correct',
-}
+import { WordState } from '../_components/word.component';
 
 interface WordStatus {
   word: string;
@@ -83,6 +77,7 @@ export class MapLowerUpperWordsComponent {
     this.wrongWord$.next(undefined);
   }
 
+  private _aniTimer?: NodeJS.Timeout;
   async onDragDrop(e: CdkDragDrop<WordStatus, WordStatus, string>) {
     const isCorrectWord = e.item.data === e.container.data?.word;
     if (isCorrectWord) {
@@ -90,7 +85,8 @@ export class MapLowerUpperWordsComponent {
     } else {
       this.reset();
       this.wrongWord$.next(e.container.data?.word);
-      setTimeout(() => this.reset(), 2000);
+      clearTimeout(this._aniTimer);
+      this._aniTimer = setTimeout(() => this.reset(), 2000);
     }
   }
   onDragEnter(e: CdkDragEnter<WordStatus>) {

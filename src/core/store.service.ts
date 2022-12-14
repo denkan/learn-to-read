@@ -6,6 +6,7 @@ export interface Store {
 }
 
 export interface WordSet {
+  id: string;
   title: string;
   words: string[];
 }

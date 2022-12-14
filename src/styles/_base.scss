@@ -12,7 +12,10 @@ body {
   font-family: $font-family-base;
 }
 html {
-  font-size: 150%;
+  font-size: 3vw; // landscape
+  @media (orientation: portrait) {
+    font-size: 5vw; // landscape
+  }
 }
 body {
   font-size: 1em;

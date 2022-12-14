@@ -1,24 +1,46 @@
 <div
-  class="wrapper flex-fill full-fill bg-op-5"
+  *ngIf="$$ | async as $"
+  class="wrapper full-fill overflow-auto bg-op-5"
   [class.edit-mode]="editMode"
   [class.disable-click]="clickDisabled"
   (click)="editMode && setEditMode(false)"
 >
-  <div class="box new" matRipple (click)="gotoLink('new')">
-    <b>+</b>
-  </div>
-  <ng-container *ngFor="let ws of store.wordSets$ | async; let index = index">
-    <div
-      class="box"
-      matRipple
-      (click)="gotoLink(['/game', index])"
-      (longpress)="setEditMode(true)"
-      (longpressEnd)="enableClick()"
-      [style.animation-delay]="-((index % 4) * 0.2) + 's'"
-    >
-      <b>{{ ws.title }}</b>
+  <div
+    class="box-list"
+    cdkDropList
+    [cdkDropListDisabled]="!editMode"
+    [cdkDropListData]="$.wordSets"
+    (cdkDropListDropped)="onBoxSortDrop($event)"
+    cdkDropListOrientation="horizontal"
+  >
+    <div class="box-wrapper">
+      <div
+        class="box new"
+        matRipple
+        [matRippleDisabled]="editMode"
+        (click)="gotoLink('new')"
+      >
+        <b>+</b>
+      </div>
     </div>
-  </ng-container>
+    <div
+      class="box-wrapper"
+      *ngFor="let ws of $.wordSets; let index = index"
+      cdkDrag
+    >
+      <div
+        class="box"
+        matRipple
+        [matRippleDisabled]="editMode"
+        (click)="gotoLink(['/game', ws.id])"
+        (longpress)="setEditMode(true)"
+        (longpressEnd)="enableClick()"
+        [style.animation-delay]="-((index % 4) * 0.2) + 's'"
+      >
+        <b>{{ ws.title }}</b>
+      </div>
+    </div>
+  </div>
 </div>
 
 <router-outlet></router-outlet>

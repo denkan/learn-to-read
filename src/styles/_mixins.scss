@@ -29,6 +29,8 @@
   $background-base: map.get($background-palette, "background");
   $foreground-base: map.get($foreground-palette, "base");
   $primary: mat.get-color-from-palette($primary-palette, 500);
+  $primary-light-1: mat.get-color-from-palette($primary-palette, 300);
+  $primary-light-2: mat.get-color-from-palette($primary-palette, 100);
   $primary-contrast: mat.get-color-from-palette(
     $primary-palette,
     "500-contrast"
@@ -81,6 +83,8 @@
     "light-op-75": rgba($light, 0.75),
     "text-base": map.get($foreground-palette, "text"),
     "primary": $primary,
+    "primary-light-1": $primary-light-1,
+    "primary-light-2": $primary-light-2,
     "primary-contrast": $primary-contrast,
     "accent": $accent,
     "accent-contrast": $accent-contrast,
@@ -248,9 +252,17 @@
   }
 }
 
-@mixin border-box {
+@mixin border-box($ratio: 1) {
   background: white;
-  border-radius: 1em;
-  box-shadow: 0 0 1em var(--color-dark-op-25);
-  border: 3px solid var(--color-dark-op-50);
+  border-radius: ($ratio * 0.5em);
+  box-shadow: ($ratio * 0.1em) ($ratio * 0.1em) ($ratio * 0.25em)
+    var(--color-dark-op-10);
+  border: ($ratio * 0.1em) solid var(--color-fg-op-50);
+}
+@mixin border-box-hover($ratio: 1) {
+  background: white;
+  border-radius: ($ratio * 0.5em);
+  box-shadow: ($ratio * 0.1em) ($ratio * 0.1em) ($ratio * 1em)
+    var(--color-dark-op-25);
+  border: ($ratio * 0.1em) solid var(--color-fg);
 }

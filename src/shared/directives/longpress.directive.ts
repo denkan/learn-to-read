@@ -12,7 +12,7 @@ export class LongPressDirective {
   @Output('longpressEnd') longPressEnd = new EventEmitter<
     MouseEvent | TouchEvent
   >();
-  @Input('longpressTime') time = 1500;
+  @Input('longpressTime') time = 1000;
 
   private _timer?: NodeJS.Timeout;
   private _didSend = false;

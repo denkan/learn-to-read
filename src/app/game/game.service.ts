@@ -6,12 +6,12 @@ import { StoreService } from '../../core/store.service';
 export class GameService {
   constructor(private store: StoreService) {}
 
-  readonly wordsetIndex$ = new BehaviorSubject<number>(0);
+  readonly wordsetId$ = new BehaviorSubject<string | null>(null);
 
   readonly wordset$ = combineLatest([
     this.store.wordSets$,
-    this.wordsetIndex$,
-  ]).pipe(map(([allWordsets, index]) => allWordsets[index]));
+    this.wordsetId$,
+  ]).pipe(map(([allWordsets, id]) => allWordsets.find((ws) => ws.id === id)));
 
-  readonly words$ = this.wordset$.pipe(map((ws) => ws.words));
+  readonly words$ = this.wordset$.pipe(map((ws) => ws?.words || []));
 }

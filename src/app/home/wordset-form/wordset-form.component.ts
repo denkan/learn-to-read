@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { Component } from '@angular/core';
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
-import { StoreService, WordSet } from '../../../core/store.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { filter, map, switchMap } from 'rxjs';
+import { genId } from 'src/shared/utils/misc.utils';
+import { StoreService } from '../../../core/store.service';
 
 @Component({
   selector: 'app-wordset-form',
@@ -25,28 +26,27 @@ export class WordsetFormComponent {
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
 
   readonly form = this.fb.group({
-    index: [-1],
+    id: [''],
     title: ['', Validators.required],
     words: [[] as string[], minLengthArray(this.minWords)],
   });
 
   get isEditing() {
-    const { index } = this.form.value || {};
-    return index != null && index >= 0;
+    const { id } = this.form.value || {};
+    return !!id;
   }
 
   private trackEditIndex() {
     this.route.params
       .pipe(
-        map((p) => p?.['index']),
-        filter((x) => !!x && parseInt(x) >= 0),
-        map((x) => parseInt(x)),
-        switchMap((index) =>
+        map((p) => p?.['id']),
+        filter((id) => !!id),
+        switchMap((id) =>
           this.store.wordSets$.pipe(
-            map((wordSets) => ({ ...wordSets[index], index }))
+            map((wordSets) => wordSets.find((ws) => ws.id == id)!)
           )
         ),
-        filter((x) => !!x)
+        filter((ws) => !!ws)
       )
       .subscribe((editWordSet) => {
         this.form.patchValue(editWordSet);
@@ -69,14 +69,15 @@ export class WordsetFormComponent {
   }
 
   onSubmit() {
-    const { index, title, words } = this.form.value || {};
+    const { id, title, words } = this.form.value || {};
     const isValid = title && words && words.length >= this.minWords;
     if (!isValid) {
       return;
     }
-    const newWordSet = { title, words };
     const wordSets = [...this.store.data.wordSets];
-    if (this.isEditing && index != null) {
+    const newWordSet = { title, words, id: genId() };
+    const index = wordSets.findIndex((ws) => ws.id === id);
+    if (this.isEditing && !!id && index >= 0) {
       wordSets[index] = newWordSet;
     } else {
       wordSets.push(newWordSet);

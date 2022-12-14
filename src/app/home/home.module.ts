@@ -14,7 +14,7 @@ const routes: Routes = [
     component: HomeComponent,
     children: [
       { path: 'new', component: WordsetFormComponent },
-      { path: 'edit/:index', component: WordsetFormComponent },
+      { path: 'edit/:id', component: WordsetFormComponent },
     ],
   },
 ];

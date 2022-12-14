@@ -1,5 +1,5 @@
 <div class="wrapper full-fill flex-fill flex-center bg-dark-op-50">
-  <form class="border-box p-1" [formGroup]="form" (ngSubmit)="onSubmit()">
+  <form class="border-box-150 p-1" [formGroup]="form" (ngSubmit)="onSubmit()">
     <h1 class="ts-150p flex-center">
       {{ isEditing ? "Edit word set" : "Create new word set" }}
     </h1>
@@ -44,8 +44,8 @@
         </strong>
       </button>
 
-      <a mat-mini-fab routerLink="../" class="close">
-        <mat-icon>close</mat-icon>
+      <a routerLink="../" class="close ts-125p">
+        <mat-icon class="ts">close</mat-icon>
       </a>
     </div>
   </form>

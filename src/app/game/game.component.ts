@@ -17,6 +17,6 @@ export class GameComponent {
         map((p) => p['wordsetIndex'] || 0),
         untilDestroyed(this)
       )
-      .subscribe((index) => this.game.wordsetIndex$.next(index));
+      .subscribe((index) => this.game.wordsetId$.next(index));
   }
 }

@@ -63,8 +63,18 @@
   user-select: text;
 }
 
-.border-box {
+.border-box,
+.border-box-100 {
   @include border-box;
+}
+.border-box-50 {
+  @include border-box(0.5);
+}
+.border-box-150 {
+  @include border-box(1.5);
+}
+.border-box-200 {
+  @include border-box(2);
 }
 
 .w-100 {

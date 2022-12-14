@@ -1,21 +1,28 @@
+@import "mixins";
+
 .wrapper {
   display: grid;
   grid-template: auto / auto minmax(10em, 30%);
   gap: 1em;
-  padding: 1em;
 
   @media (orientation: portrait) {
     grid-template: 8em auto / auto;
+  }
+
+  main {
+    padding: 1em;
   }
 
   aside {
     display: grid;
     grid-template: auto / auto;
     align-items: center;
+    overflow: auto;
+    gap: 0.5em;
+    padding: 1em;
 
     @media (orientation: portrait) {
-      grid-template: auto / repeat(2, calc(50% - 0.5em));
-      gap: 1em;
+      grid-template: auto / repeat(2, calc(50% - 0.25em));
     }
   }
 }

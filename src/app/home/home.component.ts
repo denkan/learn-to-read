@@ -1,7 +1,8 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { CdkDragDrop } from '@angular/cdk/drag-drop';
+import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { map } from 'rxjs';
-import { StoreService } from '../../core/store.service';
+import { combineLatest, map } from 'rxjs';
+import { StoreService, WordSet } from '../../core/store.service';
 
 @Component({
   selector: 'app-home',
@@ -14,6 +15,14 @@ export class HomeComponent {
     private router: Router,
     private route: ActivatedRoute
   ) {}
+
+  readonly wordsetsSorted$ = this.store.wordSets$.pipe(
+    map((wordsets) => wordsets.reverse())
+  );
+
+  readonly $$ = combineLatest([this.wordsetsSorted$]).pipe(
+    map(([wordSets]) => ({ wordSets }))
+  );
 
   gotoLink(routeLink: string | unknown[]) {
     if (this.editMode) {
@@ -33,11 +42,16 @@ export class HomeComponent {
     this.clickDisabled = enabled;
   }
 
+  // hack to disable the click that occur at longpress release
   private _enableClickTimer?: NodeJS.Timer;
   enableClick() {
     clearTimeout(this._enableClickTimer);
     this._enableClickTimer = setTimeout(() => {
       this.clickDisabled = false;
     }, 100);
+  }
+
+  onBoxSortDrop(e: CdkDragDrop<WordSet[]>) {
+    console.log(e);
   }
 }

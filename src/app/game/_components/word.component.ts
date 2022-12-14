@@ -28,9 +28,11 @@ export enum WordState {
         padding: 0.5em;
         color: var(--color-fg);
         background: var(--color-bg);
-        border: 0.1em solid var(--color-fg-op-75);
-        border-radius: 0.5em;
+        @include border-box;
+        /* border: 0.1em solid var(--color-fg-op-75);
+        border-radius: 0.5em; */
         transition: 0.2s;
+        transition-property: transform, box-shadow, background;
 
         &.state-idle,
         &.state-hover {

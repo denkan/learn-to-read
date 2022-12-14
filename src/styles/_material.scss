@@ -8,8 +8,8 @@ $typography: mat.define-typography-config(
 );
 
 // Light theme
-$light-primary: mat.define-palette(mat.$indigo-palette);
-$light-accent: mat.define-palette(mat.$cyan-palette);
+$light-primary: mat.define-palette(mat.$cyan-palette);
+$light-accent: mat.define-palette(mat.$yellow-palette);
 $light-theme: mat.define-light-theme(
   (
     color: (

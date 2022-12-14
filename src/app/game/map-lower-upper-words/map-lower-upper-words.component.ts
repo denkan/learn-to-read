@@ -86,7 +86,7 @@ export class MapLowerUpperWordsComponent {
       this.reset();
       this.wrongWord$.next(e.container.data?.word);
       clearTimeout(this._aniTimer);
-      this._aniTimer = setTimeout(() => this.reset(), 2000);
+      this._aniTimer = setTimeout(() => this.reset(), 1200);
     }
   }
   onDragEnter(e: CdkDragEnter<WordStatus>) {

@@ -18,7 +18,7 @@ jobs:
         uses: actions/checkout@v2
       - run: |
           git fetch
-          git checkout v2
+          git checkout main
           git pull
 
       - name: Get npm version

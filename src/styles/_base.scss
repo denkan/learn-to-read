@@ -3,6 +3,7 @@
 :root {
   @include color-vars($default-theme);
   @include margin-padding-vars;
+  @include material-vars;
 }
 
 html,

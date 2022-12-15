@@ -17,4 +17,12 @@ form {
     background: var(--color-fg);
     color: var(--color-bg);
   }
+
+  input.word-input {
+    text-transform: lowercase;
+
+    &::placeholder {
+      text-transform: none;
+    }
+  }
 }

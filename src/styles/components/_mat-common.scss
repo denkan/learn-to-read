@@ -1,0 +1,33 @@
+//
+// FYI: Material root variables is in ../_mixins.scss#material-vars
+//
+
+// mat-button
+.mdc-button {
+  &.ts,
+  .ts & {
+    height: auto;
+    padding: 0.5em 1em;
+    @include border-box;
+  }
+}
+
+// mat-chip
+.mat-mdc-chip {
+  &.ts,
+  .ts & {
+    font-size: 0.8em;
+    line-height: 1;
+    margin: 0.35em 0 0em 0.25em !important;
+  }
+}
+
+// mat-icon
+.mat-icon {
+  &.ts,
+  .ts & {
+    font-size: 1em;
+    width: 1em;
+    height: 1em;
+  }
+}

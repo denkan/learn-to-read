@@ -22,6 +22,7 @@
         </mat-chip-row>
         <input
           placeholder="Add word..."
+          class="word-input"
           [matChipInputFor]="chipGrid"
           [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
           [matChipInputAddOnBlur]="true"
@@ -45,7 +46,7 @@
       </button>
 
       <a routerLink="../" class="close ts-125p">
-        <mat-icon class="ts">close</mat-icon>
+        <mat-icon>close</mat-icon>
       </a>
     </div>
   </form>

@@ -266,3 +266,9 @@
     var(--color-dark-op-25);
   border: ($ratio * 0.1em) solid var(--color-fg);
 }
+
+// material vars
+@mixin material-vars {
+  --mdc-chip-container-shape-radius: 0.5em;
+  --mdc-chip-container-height: 1.1em;
+}

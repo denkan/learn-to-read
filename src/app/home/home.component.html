@@ -1,24 +1,24 @@
 <div
   *ngIf="$$ | async as $"
   class="wrapper full-fill overflow-auto bg-op-5"
-  [class.edit-mode]="editMode"
+  [class.edit-mode]="$.isEditMode"
   [class.disable-click]="clickDisabled"
-  (click)="editMode && setEditMode(false)"
+  (click)="$.isEditMode && setEditMode(false)"
 >
   <div
     class="box-list"
     cdkDropList
-    [cdkDropListDisabled]="!editMode"
+    [cdkDropListDisabled]="!$.isEditMode"
     [cdkDropListData]="$.wordSets"
     (cdkDropListDropped)="onBoxSortDrop($event)"
-    cdkDropListOrientation="horizontal"
+    [cdkDropListOrientation]="$.isPortrait ? 'vertical' : 'horizontal'"
   >
     <div class="box-wrapper">
       <div
         class="box new"
         matRipple
-        [matRippleDisabled]="editMode"
-        (click)="gotoLink('new')"
+        [matRippleDisabled]="$.isEditMode"
+        (click)="gotoLink('new', $.isEditMode)"
       >
         <b>+</b>
       </div>
@@ -31,14 +31,21 @@
       <div
         class="box"
         matRipple
-        [matRippleDisabled]="editMode"
-        (click)="gotoLink(['/game', ws.id])"
+        [matRippleDisabled]="$.isEditMode"
+        (click)="gotoLink(['/game', ws.id], $.isEditMode)"
         (longpress)="setEditMode(true)"
         (longpressEnd)="enableClick()"
         [style.animation-delay]="-((index % 4) * 0.2) + 's'"
       >
         <b>{{ ws.title }}</b>
       </div>
+      <a
+        class="edit link"
+        [class.show]="$.isEditMode"
+        (click)="gotoLink(['edit', ws.id], !$.isEditMode)"
+      >
+        <mat-icon>edit</mat-icon>
+      </a>
     </div>
   </div>
 </div>

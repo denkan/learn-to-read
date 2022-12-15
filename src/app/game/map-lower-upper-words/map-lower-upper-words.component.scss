@@ -3,14 +3,9 @@
 .wrapper {
   display: grid;
   grid-template: auto / auto minmax(10em, 30%);
-  gap: 1em;
 
   @media (orientation: portrait) {
     grid-template: 8em auto / auto;
-  }
-
-  main {
-    padding: 1em;
   }
 
   aside {
@@ -29,4 +24,8 @@
 
 .cdk-drag-placeholder {
   display: none;
+}
+.cdk-drag-animating {
+  // reset bug!!
+  // transition: transform 0.2s;
 }

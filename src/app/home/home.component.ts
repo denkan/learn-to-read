@@ -1,7 +1,9 @@
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
+import { Location } from '@angular/common';
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { combineLatest, map } from 'rxjs';
+import { LayoutService } from 'src/shared/material/layout.service';
 import { StoreService, WordSet } from '../../core/store.service';
 
 @Component({
@@ -13,19 +15,31 @@ export class HomeComponent {
   constructor(
     public store: StoreService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private location: Location,
+    private layout: LayoutService
   ) {}
 
   readonly wordsetsSorted$ = this.store.wordSets$.pipe(
-    map((wordsets) => wordsets.reverse())
+    map((wordsets) => [...wordsets].reverse())
   );
 
-  readonly $$ = combineLatest([this.wordsetsSorted$]).pipe(
-    map(([wordSets]) => ({ wordSets }))
+  readonly isEditMode$ = this.route.queryParams.pipe(map((qs) => !!qs['edit']));
+
+  readonly $$ = combineLatest([
+    this.wordsetsSorted$,
+    this.isEditMode$,
+    this.layout.isPortrait$,
+  ]).pipe(
+    map(([wordSets, isEditMode, isPortrait]) => ({
+      wordSets,
+      isEditMode,
+      isPortrait,
+    }))
   );
 
-  gotoLink(routeLink: string | unknown[]) {
-    if (this.editMode) {
+  async gotoLink(routeLink: string | unknown[], disabled?: boolean) {
+    if (disabled) {
       return;
     }
     if (typeof routeLink === 'string') {
@@ -34,12 +48,15 @@ export class HomeComponent {
     this.router.navigate(routeLink, { relativeTo: this.route });
   }
 
-  editMode = false;
   clickDisabled = false;
 
-  setEditMode(enabled: boolean) {
-    this.editMode = enabled;
-    this.clickDisabled = enabled;
+  setEditMode(enable: boolean) {
+    if (enable) {
+      this.router.navigate([], { queryParams: { edit: 1 } });
+    } else {
+      this.location.back();
+    }
+    this.clickDisabled = enable;
   }
 
   // hack to disable the click that occur at longpress release

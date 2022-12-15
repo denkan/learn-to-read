@@ -1,12 +1,15 @@
 <div *ngIf="$$ | async as $" cdkDropListGroup class="wrapper full-fill bg-op-5">
-  <main class="flex-fill flex-align-center flex-justify-center" cdkDropList>
-    <div class="p-1" *ngIf="$.currWord">
+  <main class="flex-center" cdkDropList>
+    <div
+      *ngIf="$.currWord"
+      class="p-1"
+      cdkDrag
+      [cdkDragData]="$.currWord"
+      (cdkDragDropped)="onDragDrop($event)"
+    >
       <app-word
         bgcolor="var(--color-primary-light-2)"
         innerClass="px-1 ts-120p"
-        cdkDrag
-        [cdkDragData]="$.currWord"
-        (cdkDragDropped)="onDragDrop($event)"
       >
         {{ formatWord($.currWord, true) }}
       </app-word>

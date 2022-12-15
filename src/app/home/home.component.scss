@@ -32,6 +32,31 @@
   }
 }
 
+.box-wrapper {
+  position: relative;
+  width: min-content;
+
+  .edit {
+    position: absolute;
+    bottom: 0.25em;
+    left: 0.25em;
+    height: 1.5em;
+    width: 1.5em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 0.25em;
+    background: var(--color-fg);
+    color: var(--color-bg);
+    transform: scale(0);
+    transition: transform 0.2s;
+    &.show {
+      transform: scale(1);
+      cursor: pointer;
+    }
+  }
+}
+
 .box {
   width: calc(25% - 2em);
   min-width: 7em;
@@ -41,8 +66,9 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  text-align: center;
   margin: 0.5em;
-  padding: 1em;
+  padding: 0.5em;
   text-decoration: none;
   transition: 0.2s;
   transition-property: transform, box-shadow;
@@ -63,12 +89,17 @@
     b {
       font-size: 300%;
     }
+
+    .edit-mode & {
+      pointer-events: none;
+    }
   }
 }
 
 .wrapper.edit-mode {
   .box {
     animation: wobble 0.3s infinite linear;
+    cursor: move;
 
     &.new {
       animation: none;

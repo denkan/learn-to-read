@@ -1,0 +1,50 @@
+name: "Deploy to GH-pages"
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  cicd-job:
+    name: Build and deploy to Github Pages
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16.x]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - run: |
+          git fetch
+          git checkout v2
+          git pull
+
+      - name: Get npm version
+        id: pkg-version
+        uses: martinbeentjes/npm-get-version-action@master
+
+      - name: Cache node modules
+        uses: actions/cache@v1
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: ${{ runner.os }}-node-
+
+      - name: Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: NPM install & build
+        run: |
+          npm i
+          npm run build
+
+      - name: Deploy to Github Pages
+        uses: JamesIves/github-pages-deploy-action@4.1.7
+        with:
+          branch: gh-pages
+          folder: dist/ordspelet
+          target-folder: /

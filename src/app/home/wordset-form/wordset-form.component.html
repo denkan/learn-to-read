@@ -1,62 +1,67 @@
 <div class="wrapper full-fill flex-fill flex-center bg-dark-op-50">
-  <form class="border-box-150 p-1" [formGroup]="form" (ngSubmit)="onSubmit()">
-    <h1 class="ts-150p flex-center">
-      {{ isEditing ? "Edit word set" : "Create new word set" }}
-    </h1>
-    <mat-form-field appearance="outline" class="w-100 ts-120p">
-      <mat-label>Title</mat-label>
-      <input matInput formControlName="title" autofocus />
-    </mat-form-field>
-
-    <mat-form-field appearance="outline" class="w-100 ts-120p">
-      <mat-label>Words to learn</mat-label>
-      <mat-chip-grid #chipGrid aria-label="Enter words">
-        <mat-chip-row
-          *ngFor="let word of form.value.words"
-          (removed)="removeWord(word)"
-        >
-          {{ word }}
-          <button matChipRemove [attr.aria-label]="'remove ' + word">
-            <mat-icon>cancel</mat-icon>
-          </button>
-        </mat-chip-row>
-        <input
-          placeholder="Add word..."
-          class="word-input"
-          [matChipInputFor]="chipGrid"
-          [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-          [matChipInputAddOnBlur]="true"
-          (matChipInputTokenEnd)="addWord($event)"
-        />
-      </mat-chip-grid>
-    </mat-form-field>
-
-    <mat-checkbox
-      *ngIf="isEditing"
-      formControlName="delete"
-      color="warn"
-      class="ts-80p"
-    >
-      Delete this word set (can't be undone)
-    </mat-checkbox>
-
-    <hr />
-    <div class="flex-center">
-      <button
-        type="submit"
-        mat-raised-button
-        [color]="form.value.delete ? 'warn' : 'primary'"
-        [disabled]="form.invalid"
-        class=""
-      >
-        <strong class="text-upper">
-          {{ form.value.delete ? "Delete" : isEditing ? "Save" : "Create" }}
-        </strong>
-      </button>
-
-      <a routerLink="../" class="close ts-125p">
-        <mat-icon>close</mat-icon>
-      </a>
+  <form class="border-box-150 py-1" [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="px-1 py-05">
+      <h1 class="ts-150p flex-center m-0">
+        {{ isEditing ? "Edit word set" : "Create new word set" }}
+      </h1>
     </div>
+    <div class="content-wrapper p-1">
+      <mat-form-field appearance="outline" class="w-100 ts-120p">
+        <mat-label>Title</mat-label>
+        <input matInput formControlName="title" autofocus />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="w-100 ts-120p">
+        <mat-label>Words to learn</mat-label>
+        <mat-chip-grid #chipGrid aria-label="Enter words">
+          <mat-chip-row
+            *ngFor="let word of form.value.words"
+            (removed)="removeWord(word)"
+          >
+            {{ word }}
+            <button matChipRemove [attr.aria-label]="'remove ' + word">
+              <mat-icon>cancel</mat-icon>
+            </button>
+          </mat-chip-row>
+          <input
+            placeholder="Add word..."
+            class="word-input"
+            [matChipInputFor]="chipGrid"
+            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+            [matChipInputAddOnBlur]="true"
+            (matChipInputTokenEnd)="addWord($event)"
+          />
+        </mat-chip-grid>
+      </mat-form-field>
+
+      <mat-checkbox
+        *ngIf="isEditing"
+        formControlName="delete"
+        color="warn"
+        class="ts-80p"
+      >
+        Delete this word set (can't be undone)
+      </mat-checkbox>
+    </div>
+
+    <footer class="px-1">
+      <hr class="mt-0" />
+      <div class="flex-center">
+        <button
+          type="submit"
+          mat-raised-button
+          [color]="form.value.delete ? 'warn' : 'primary'"
+          [disabled]="form.invalid"
+          class=""
+        >
+          <strong class="text-upper">
+            {{ form.value.delete ? "Delete" : isEditing ? "Save" : "Create" }}
+          </strong>
+        </button>
+      </div>
+    </footer>
+    <a (click)="location.back()" class="close ts-125p">
+      <mat-icon>close</mat-icon>
+    </a>
   </form>
 </div>

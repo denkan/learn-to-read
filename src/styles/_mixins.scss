@@ -113,6 +113,7 @@
 
 @function get-margin-padding-map() {
   @return (
+    "0": 0,
     "025": 0.25em,
     "05": 0.5em,
     "075": 0.75em,

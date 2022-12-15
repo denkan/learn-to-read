@@ -1,4 +1,5 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { Location } from '@angular/common';
 import { Component } from '@angular/core';
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
@@ -17,7 +18,8 @@ export class WordsetFormComponent {
     private fb: FormBuilder,
     private store: StoreService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    public location: Location
   ) {
     this.trackEditIndex();
   }

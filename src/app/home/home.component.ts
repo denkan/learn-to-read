@@ -1,4 +1,4 @@
-import { CdkDragDrop } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Location } from '@angular/common';
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -69,6 +69,8 @@ export class HomeComponent {
   }
 
   onBoxSortDrop(e: CdkDragDrop<WordSet[]>) {
-    console.log(e);
+    const newWordSets = [...e.container.data];
+    moveItemInArray(newWordSets, e.previousIndex, e.currentIndex);
+    this.store.patch({ wordSets: newWordSets.reverse() });
   }
 }

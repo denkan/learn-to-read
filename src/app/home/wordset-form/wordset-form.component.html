@@ -31,17 +31,26 @@
       </mat-chip-grid>
     </mat-form-field>
 
+    <mat-checkbox
+      *ngIf="isEditing"
+      formControlName="delete"
+      color="warn"
+      class="ts-80p"
+    >
+      Delete this word set (can't be undone)
+    </mat-checkbox>
+
     <hr />
     <div class="flex-center">
       <button
         type="submit"
         mat-raised-button
-        color="primary"
+        [color]="form.value.delete ? 'warn' : 'primary'"
         [disabled]="form.invalid"
         class=""
       >
         <strong class="text-upper">
-          {{ isEditing ? "Save" : "Create" }}
+          {{ form.value.delete ? "Delete" : isEditing ? "Save" : "Create" }}
         </strong>
       </button>
 

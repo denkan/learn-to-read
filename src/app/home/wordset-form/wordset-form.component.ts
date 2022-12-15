@@ -29,6 +29,7 @@ export class WordsetFormComponent {
     id: [''],
     title: ['', Validators.required],
     words: [[] as string[], minLengthArray(this.minWords)],
+    delete: [false],
   });
 
   get isEditing() {
@@ -69,7 +70,7 @@ export class WordsetFormComponent {
   }
 
   onSubmit() {
-    const { id, title, words } = this.form.value || {};
+    const { id, title, words, delete: shouldDelete } = this.form.value || {};
     const isValid = title && words && words.length >= this.minWords;
     if (!isValid) {
       return;
@@ -78,7 +79,11 @@ export class WordsetFormComponent {
     const newWordSet = { title, words, id: genId() };
     const index = wordSets.findIndex((ws) => ws.id === id);
     if (this.isEditing && !!id && index >= 0) {
-      wordSets[index] = newWordSet;
+      if (shouldDelete) {
+        wordSets.splice(index, 1);
+      } else {
+        wordSets[index] = newWordSet;
+      }
     } else {
       wordSets.push(newWordSet);
     }

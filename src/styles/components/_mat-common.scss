@@ -31,3 +31,20 @@
     height: 1em;
   }
 }
+
+// mat-checkbox
+.mat-mdc-checkbox .mdc-checkbox {
+  font-size: 0.8em;
+  width: 1em;
+  height: 1em;
+  flex: 0 0 1em;
+
+  .mdc-checkbox__background {
+    width: 1em;
+    height: 1em;
+  }
+  .mat-mdc-checkbox-touch-target {
+    width: 2em;
+    height: 2em;
+  }
+}

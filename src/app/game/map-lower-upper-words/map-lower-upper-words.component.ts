@@ -1,6 +1,14 @@
 import { CdkDragDrop, CdkDragEnter } from '@angular/cdk/drag-drop';
-import { Component } from '@angular/core';
-import { BehaviorSubject, combineLatest, map, Observable } from 'rxjs';
+import { Component, Input, OnInit } from '@angular/core';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import {
+  BehaviorSubject,
+  combineLatest,
+  distinctUntilChanged,
+  map,
+  Observable,
+} from 'rxjs';
+import { isEqualJSON } from 'src/app/shared/utils/misc.utils';
 import { GameService } from '../game.service';
 import { WordState } from '../_components/word.component';
 
@@ -9,22 +17,25 @@ interface WordStatus {
   done: boolean;
 }
 
+@UntilDestroy()
 @Component({
   selector: 'app-map-lower-upper-words',
   templateUrl: './map-lower-upper-words.component.html',
   styleUrls: ['./map-lower-upper-words.component.scss'],
 })
-export class MapLowerUpperWordsComponent {
+export class MapLowerUpperWordsComponent implements OnInit {
+  @Input() inversed?: boolean;
+
   constructor(public game: GameService) {}
 
   readonly wordsDone$ = new BehaviorSubject<string[]>([]);
 
   readonly wordsStatus$: Observable<WordStatus[]> = combineLatest([
-    this.game.words$,
+    this.game.wordset$,
     this.wordsDone$,
   ]).pipe(
-    map(([words, wordsDone]) =>
-      words.map((word) => ({
+    map(([wordset, wordsDone]) =>
+      (wordset?.words || []).map((word) => ({
         word,
         done: wordsDone.includes(word),
       }))
@@ -44,6 +55,25 @@ export class MapLowerUpperWordsComponent {
   readonly hoveredWord$ = new BehaviorSubject<string | undefined>(undefined);
   readonly wrongWord$ = new BehaviorSubject<string | undefined>(undefined);
 
+  readonly wrongMoves$ = new BehaviorSubject<{ from: string; to: string }[]>(
+    []
+  );
+
+  readonly stats$ = combineLatest([
+    this.wordsDone$,
+    this.wordsLeft$,
+    this.wrongMoves$,
+  ]).pipe(
+    map(([wordsDone, wordsLeft, wrongMoves]) => {
+      const done = wordsDone.length;
+      const left = wordsLeft.length;
+      const wrong = wrongMoves.length;
+      const total = done + wrong;
+      const scoreRatio = total > 0 ? done / total : 0;
+      return { done, left, wrong, total, scoreRatio };
+    })
+  );
+
   readonly $$ = combineLatest([
     this.wordsStatus$,
     this.currWord$,
@@ -58,12 +88,25 @@ export class MapLowerUpperWordsComponent {
     }))
   );
 
+  ngOnInit() {
+    const startedAt = Date.now();
+    this.game.patchSubGame({ startedAt });
+
+    // track score
+    this.stats$
+      .pipe(distinctUntilChanged(isEqualJSON), untilDestroyed(this))
+      .subscribe((stats) => {
+        const { scoreRatio, left } = stats;
+        const endedAt = left <= 0 ? Date.now() : undefined;
+        this.game.patchSubGame({ scoreRatio, endedAt });
+      });
+  }
+
   trackByWord(_index: number, ws: WordStatus) {
     return ws.word;
   }
   formatWord(word: string, isCurr: boolean) {
-    const inversed = false; // TODO: game option to inverse upper/lower?
-    const useUpper = isCurr || inversed;
+    const useUpper = (isCurr && !this.inversed) || (!!this.inversed && !isCurr);
     const toCase = useUpper ? 'toLocaleUpperCase' : 'toLocaleLowerCase';
     return word[toCase]();
   }
@@ -79,12 +122,15 @@ export class MapLowerUpperWordsComponent {
 
   private _aniTimer?: NodeJS.Timeout;
   async onDragDrop(e: CdkDragDrop<WordStatus, WordStatus, string>) {
-    const isCorrectWord = e.item.data === e.container.data?.word;
+    const from = e.item.data;
+    const to = e.container.data?.word;
+    const isCorrectWord = from === to;
     if (isCorrectWord) {
-      this.addWordDone(e.item.data);
+      this.addWordDone(from);
     } else {
       this.reset();
-      this.wrongWord$.next(e.container.data?.word);
+      this.wrongWord$.next(to);
+      this.wrongMoves$.next([...this.wrongMoves$.value, { from, to }]);
       clearTimeout(this._aniTimer);
       this._aniTimer = setTimeout(() => this.reset(), 1200);
     }

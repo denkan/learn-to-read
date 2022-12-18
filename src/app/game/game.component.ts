@@ -1,22 +1,42 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { map } from 'rxjs';
+import { Router } from '@angular/router';
+import { UntilDestroy } from '@ngneat/until-destroy';
 import { GameService } from './game.service';
+import { SubGameInfo, SubGameType } from './game.types';
 
 @UntilDestroy()
 @Component({
   selector: 'app-game',
-  templateUrl: './game.component.html',
-  styleUrls: ['./game.component.scss'],
+  template: `
+    <ng-container *ngIf="game.gameInfo$ | async as gi">
+      <ng-container [ngSwitch]="gi.subGame.curr.type">
+        <app-map-lower-upper-words
+          *ngSwitchCase="SubGameType.MapLowerToUpper"
+        ></app-map-lower-upper-words>
+        <app-map-lower-upper-words
+          *ngSwitchCase="SubGameType.MapUpperToLower"
+          [inversed]="true"
+        ></app-map-lower-upper-words>
+      </ng-container>
+      <!-- <pre class="ts-50p">{{ $ | json }}</pre> -->
+      <app-game-ended
+        [currSubGame]="gi.subGame.curr"
+        [nextSubGame]="gi.subGame.next"
+        (close)="setNextOrExit(gi.subGame.next)"
+      ></app-game-ended>
+    </ng-container>
+  `,
 })
 export class GameComponent {
-  constructor(public game: GameService, private route: ActivatedRoute) {
-    this.route.params
-      .pipe(
-        map((p) => p['wordsetIndex'] || 0),
-        untilDestroyed(this)
-      )
-      .subscribe((index) => this.game.wordsetId$.next(index));
+  constructor(public game: GameService, private router: Router) {}
+
+  readonly SubGameType = SubGameType;
+
+  setNextOrExit(nextSubgGame?: SubGameInfo) {
+    if (nextSubgGame) {
+      this.game.setSubGameIndex(nextSubgGame.index);
+    } else {
+      this.router.navigate(['/home']);
+    }
   }
 }

@@ -1,11 +1,11 @@
-<div class="wrapper full-fill flex-fill flex-center bg-dark-op-50">
-  <form class="border-box-150 py-1" [formGroup]="form" (ngSubmit)="onSubmit()">
+<div class="modal-wrapper">
+  <form class="modal-box w-100" [formGroup]="form" (ngSubmit)="onSubmit()">
     <div class="px-1 py-05">
       <h1 class="ts-150p flex-center m-0">
         {{ isEditing ? "Edit word set" : "Create new word set" }}
       </h1>
     </div>
-    <div class="content-wrapper p-1">
+    <div class="modal-body p-1">
       <mat-form-field appearance="outline" class="w-100 ts-120p">
         <mat-label>Title</mat-label>
         <input matInput formControlName="title" autofocus />
@@ -44,7 +44,7 @@
       </mat-checkbox>
     </div>
 
-    <footer class="px-1">
+    <footer class="px-1 pb-05">
       <hr class="mt-0" />
       <div class="flex-center">
         <button
@@ -60,7 +60,7 @@
         </button>
       </div>
     </footer>
-    <a (click)="location.back()" class="close ts-125p">
+    <a (click)="location.back()" class="modal-close">
       <mat-icon>close</mat-icon>
     </a>
   </form>

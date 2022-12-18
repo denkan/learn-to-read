@@ -32,7 +32,7 @@
         class="box"
         matRipple
         [matRippleDisabled]="$.isEditMode"
-        (click)="gotoLink(['/game', ws.id], $.isEditMode)"
+        (click)="gotoLink(['/game', ws.id, 'new'], $.isEditMode)"
         (longpress)="setEditMode(true)"
         (longpressEnd)="enableClick()"
         [style.animation-delay]="-((index % 4) * 0.2) + 's'"

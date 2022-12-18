@@ -70,6 +70,7 @@ export class GameService {
       subGames: validSubGames.map((type) => ({ type })),
     };
     this.game$.next(game);
+    this._subGameIndex$.next(0);
     return game;
   }
 

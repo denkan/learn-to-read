@@ -4,7 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { MaterialModule } from '../shared/material/material.module';
 import { GameEndedComponent } from './game-ended/game-ended.component';
 import { GameComponent } from './game.component';
-import { GameGuard } from './game.guard';
+import { CreateGameGuard, RequireGameGuard } from './game.guards';
 import { GameService } from './game.service';
 import { MapLowerUpperWordsComponent } from './map-lower-upper-words/map-lower-upper-words.component';
 import { WordComponent } from './_components/word.component';
@@ -13,7 +13,12 @@ const routes: Routes = [
   {
     path: ':wordsetId',
     component: GameComponent,
-    canActivate: [GameGuard],
+    canActivate: [RequireGameGuard],
+  },
+  {
+    path: ':wordsetId/new',
+    component: GameComponent,
+    canActivate: [CreateGameGuard],
   },
 ];
 
@@ -25,6 +30,6 @@ const routes: Routes = [
     GameEndedComponent,
     MapLowerUpperWordsComponent,
   ],
-  providers: [GameService, GameGuard],
+  providers: [GameService, CreateGameGuard, RequireGameGuard],
 })
 export class GameModule {}

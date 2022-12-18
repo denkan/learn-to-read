@@ -4,7 +4,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule, Routes } from '@angular/router';
 
 import { AppComponent } from './app.component';
-import { CoreModule } from 'src/core/core.module';
+import { CoreModule } from './core/core.module';
 
 const routes: Routes = [
   {

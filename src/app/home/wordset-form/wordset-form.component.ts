@@ -5,8 +5,8 @@ import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { ActivatedRoute, Router } from '@angular/router';
 import { filter, map, switchMap } from 'rxjs';
-import { genId } from 'src/shared/utils/misc.utils';
-import { StoreService } from '../../../core/store.service';
+import { StoreService } from '../../core/store.service';
+import { genId } from '../../shared/utils/misc.utils';
 
 @Component({
   selector: 'app-wordset-form',

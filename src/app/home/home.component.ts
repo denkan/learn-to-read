@@ -3,8 +3,8 @@ import { Location } from '@angular/common';
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { combineLatest, map } from 'rxjs';
-import { LayoutService } from 'src/shared/material/layout.service';
-import { StoreService, WordSet } from '../../core/store.service';
+import { StoreService, WordSet } from '../core/store.service';
+import { LayoutService } from '../shared/material/layout.service';
 
 @Component({
   selector: 'app-home',

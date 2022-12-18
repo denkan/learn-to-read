@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, combineLatest, map } from 'rxjs';
-import { StoreService } from '../../core/store.service';
+import { StoreService } from '../core/store.service';
 
 @Injectable()
 export class GameService {

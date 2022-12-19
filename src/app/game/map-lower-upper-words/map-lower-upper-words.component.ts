@@ -130,7 +130,7 @@ export class MapLowerUpperWordsComponent implements OnInit {
       this.addWordDone(from);
     } else {
       this.reset();
-      if (to) {
+      if (to && !e.container.disabled) {
         this.wrongWord$.next(to);
         this.wrongMoves$.next([...this.wrongMoves$.value, { from, to }]);
         clearTimeout(this._aniTimer);

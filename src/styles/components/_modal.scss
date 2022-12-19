@@ -32,5 +32,19 @@
     background: var(--color-fg);
     color: var(--color-bg);
     font-size: 125%;
+
+    &:before,
+    &:after {
+      display: inline-block;
+      content: " ";
+      width: 0.15em;
+      height: 0.8em;
+      background: var(--color-bg);
+      border-radius: 0.1em;
+      transform: rotate(45deg) translate(0.05em, -0.05em);
+    }
+    &:after {
+      transform: rotate(-45deg) translate(-0.05em, -0.05em);
+    }
   }
 }

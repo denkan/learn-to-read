@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { MaterialModule } from '../shared/material/material.module';
+import { StarsModule } from '../shared/ui/stars';
 import { GameEndedComponent } from './game-ended/game-ended.component';
 import { GameComponent } from './game.component';
 import { CreateGameGuard, RequireGameGuard } from './game.guards';
@@ -23,7 +24,12 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [CommonModule, RouterModule.forChild(routes), MaterialModule],
+  imports: [
+    CommonModule,
+    RouterModule.forChild(routes),
+    MaterialModule,
+    StarsModule,
+  ],
   declarations: [
     GameComponent,
     WordComponent,

@@ -47,6 +47,7 @@ export class MapLowerUpperWordsComponent implements OnInit {
     )
   );
   readonly currWord$ = this.wordsLeft$.pipe(
+    distinctUntilChanged(isEqualJSON),
     map((words) => {
       const i = Math.floor(Math.random() * words.length);
       return words[i];

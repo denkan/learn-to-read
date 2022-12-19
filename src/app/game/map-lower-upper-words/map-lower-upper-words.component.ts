@@ -129,10 +129,12 @@ export class MapLowerUpperWordsComponent implements OnInit {
       this.addWordDone(from);
     } else {
       this.reset();
-      this.wrongWord$.next(to);
-      this.wrongMoves$.next([...this.wrongMoves$.value, { from, to }]);
-      clearTimeout(this._aniTimer);
-      this._aniTimer = setTimeout(() => this.reset(), 1200);
+      if (to) {
+        this.wrongWord$.next(to);
+        this.wrongMoves$.next([...this.wrongMoves$.value, { from, to }]);
+        clearTimeout(this._aniTimer);
+        this._aniTimer = setTimeout(() => this.reset(), 1200);
+      }
     }
   }
   onDragEnter(e: CdkDragEnter<WordStatus>) {

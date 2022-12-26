@@ -1,6 +1,7 @@
 .modal-wrapper {
   @include full-fill;
   @include flex-fill;
+  z-index: 2;
   justify-content: center;
   align-items: center;
   background: var(--color-dark-op-50);

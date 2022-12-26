@@ -8,6 +8,7 @@ import {
   map,
   Observable,
 } from 'rxjs';
+import { ConfettiService } from 'src/app/shared/ui/confetti/confetti.service';
 import { isEqualJSON } from 'src/app/shared/utils/misc.utils';
 import { GameService } from '../game.service';
 import { WordState } from '../_components/word.component';
@@ -26,7 +27,7 @@ interface WordStatus {
 export class MapLowerUpperWordsComponent implements OnInit {
   @Input() inversed?: boolean;
 
-  constructor(public game: GameService) {}
+  constructor(public game: GameService, private confetti: ConfettiService) {}
 
   readonly wordsDone$ = new BehaviorSubject<string[]>([]);
 
@@ -128,6 +129,7 @@ export class MapLowerUpperWordsComponent implements OnInit {
     const isCorrectWord = from === to;
     if (isCorrectWord) {
       this.addWordDone(from);
+      this.confettiByEvent(e.event);
     } else {
       this.reset();
       if (to && !e.container.disabled) {
@@ -158,5 +160,19 @@ export class MapLowerUpperWordsComponent implements OnInit {
       return WordState.Wrong;
     }
     return WordState.Idle;
+  }
+
+  confettiByEvent(e: MouseEvent | TouchEvent) {
+    const { clientX, clientY } =
+      (e as TouchEvent).changedTouches?.[0] || (e as MouseEvent);
+    const { innerWidth, innerHeight } = e.view!;
+    const x = clientX / innerWidth;
+    const y = clientY / innerHeight;
+    this.confetti.run({
+      origin: { x, y },
+      particleCount: 12,
+      spread: 70,
+      startVelocity: 15,
+    });
   }
 }

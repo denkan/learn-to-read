@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { MaterialModule } from '../shared/material/material.module';
+import { ConfettiModule } from '../shared/ui/confetti/confetti.module';
 import { StarsModule } from '../shared/ui/stars';
 import { GameEndedComponent } from './game-ended/game-ended.component';
 import { GameComponent } from './game.component';
@@ -29,6 +30,7 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     MaterialModule,
     StarsModule,
+    ConfettiModule,
   ],
   declarations: [
     GameComponent,

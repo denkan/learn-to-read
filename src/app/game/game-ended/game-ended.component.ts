@@ -18,7 +18,7 @@ const ani = `${delay} ${easing}`;
   selector: 'app-game-ended',
   template: `
     <div *ngIf="show" @showModalAnimation class="modal-wrapper">
-      <div class="modal-box">
+      <div class="modal-box" [confetti]="{ delay: 2000 }">
         <header class="p-1 text-center">
           <h1 class="m-0">Nice job!</h1>
         </header>
@@ -90,7 +90,6 @@ export class GameEndedComponent {
   @Output() close = new EventEmitter();
 
   get show() {
-    // return true;
     return !!(this.currSubGame?.endedAt && this.currSubGame.scoreRatio);
   }
 }

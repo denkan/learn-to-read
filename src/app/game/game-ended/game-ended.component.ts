@@ -2,12 +2,17 @@ import {
   animate,
   group,
   query,
+  stagger,
   style,
   transition,
   trigger,
 } from '@angular/animations';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { SubGame } from '../game.types';
+
+const easing = 'cubic-bezier(.5,0,.5,2.2)';
+const delay = '0.5s';
+const ani = `${delay} ${easing}`;
 
 @Component({
   selector: 'app-game-ended',
@@ -47,25 +52,32 @@ import { SubGame } from '../game.types';
       transition(':enter', [
         group([
           query('.modal-box', style({ transform: 'scale(0)' })),
+          query('.modal-box h1', style({ transform: 'scale(0)' })),
+          query(
+            'app-stars app-star',
+            style({ transform: 'scale(0) rotate(-180deg)' })
+          ),
           query(':self', [
             style({ opacity: 0 }),
-            animate('0.2s', style({ opacity: 1 })),
+            animate(ani, style({ opacity: 1 })),
           ]),
-          query(
-            '.modal-box',
-            animate('0.2s', style({ transform: 'scale(1)' }))
-          ),
+          query('.modal-box', animate(ani, style({ transform: 'scale(1)' }))),
         ]),
+        query('.modal-box h1', animate(ani, style({ transform: 'scale(1)' }))),
+        query(
+          'app-stars app-star',
+          stagger(
+            '0.3s',
+            animate(ani, style({ transform: 'scale(1) rotate(0deg)' }))
+          )
+        ),
       ]),
       transition(':leave', [
         group([
-          query(
-            '.modal-box',
-            animate('0.2s', style({ transform: 'scale(0)' }))
-          ),
+          query('.modal-box', animate(ani, style({ transform: 'scale(0)' }))),
           query(':self', [
             style({ opacity: 1 }),
-            animate('0.2s', style({ opacity: 0 })),
+            animate(ani, style({ opacity: 0 })),
           ]),
         ]),
       ]),
@@ -78,6 +90,7 @@ export class GameEndedComponent {
   @Output() close = new EventEmitter();
 
   get show() {
+    // return true;
     return !!(this.currSubGame?.endedAt && this.currSubGame.scoreRatio);
   }
 }

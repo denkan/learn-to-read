@@ -3,12 +3,21 @@ import { Component, Input, OnChanges } from '@angular/core';
 @Component({
   selector: 'app-stars',
   template: `
-    <app-star
+    <span
+      class="star-wrapper"
       *ngFor="let r of ratios; let index = index"
-      [fill]="ratio != null && ratio >= r"
       [style.transform]="warpedStyles[index]"
-    ></app-star>
+    >
+      <app-star [fill]="ratio != null && ratio >= r"></app-star>
+    </span>
   `,
+  styles: [
+    `
+      .star-wrapper {
+        display: inline-block;
+      }
+    `,
+  ],
 })
 export class StarsComponent implements OnChanges {
   @Input() ratio?: number;

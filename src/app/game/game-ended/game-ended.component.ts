@@ -1,26 +1,13 @@
-import {
-  animate,
-  group,
-  query,
-  stagger,
-  style,
-  transition,
-  trigger,
-} from '@angular/animations';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { SubGame } from '../game.types';
-
-const easing = 'cubic-bezier(.5,0,.5,2.2)';
-const delay = '0.5s';
-const ani = `${delay} ${easing}`;
 
 @Component({
   selector: 'app-game-ended',
   template: `
-    <div *ngIf="show" @showModalAnimation class="modal-wrapper">
-      <div class="modal-box" [confetti]="{ delay: 2000 }">
+    <div *ngIf="show" class="modal-wrapper fadeIn">
+      <div class="modal-box scaleUp" [confetti]="{ delay: 2000 }">
         <header class="p-1 text-center">
-          <h1 class="m-0">Nice job!</h1>
+          <h1 class="m-0 scaleUp">Nice job!</h1>
         </header>
         <div class="px-1 flex-center">
           <div class="ts-300p lh-80">
@@ -42,46 +29,73 @@ const ani = `${delay} ${easing}`;
   `,
   styles: [
     `
+      .fadeIn {
+        opacity: 0;
+        animation: 0.5s fadeIn forwards;
+      }
+      .scaleUp {
+        transform: scale(0);
+        animation: 0.5s scaleUp cubic-bezier(0.5, 0, 0.5, 2.2) forwards;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+      @keyframes scaleUp {
+        from {
+          transform: scale(0);
+        }
+        to {
+          transform: scale(1);
+        }
+      }
+
       .modal-box {
         min-width: 16em;
+
+        &.scaleUp {
+          animation-delay: 0.3s;
+        }
+
+        h1.scaleUp {
+          animation-delay: 0.8s;
+        }
+      }
+
+      :host ::ng-deep {
+        @keyframes scaleUpSpin {
+          from {
+            transform: scale(0) rotate(-180deg);
+          }
+          to {
+            transform: scale(1) rotate(0deg);
+          }
+        }
+        app-stars {
+          .star-wrapper {
+            app-star {
+              transform: scale(0) rotate(-180deg);
+              animation: 0.7s scaleUpSpin cubic-bezier(0.5, 0, 0.5, 2.2)
+                forwards;
+            }
+
+            &:nth-of-type(1) app-star {
+              animation-delay: 1s;
+            }
+            &:nth-of-type(2) app-star {
+              animation-delay: 1.2s;
+            }
+            &:nth-of-type(3) app-star {
+              animation-delay: 1.4s;
+            }
+          }
+        }
       }
     `,
-  ],
-  animations: [
-    trigger('showModalAnimation', [
-      transition(':enter', [
-        group([
-          query('.modal-box', style({ transform: 'scale(0)' })),
-          query('.modal-box h1', style({ transform: 'scale(0)' })),
-          query(
-            'app-stars app-star',
-            style({ transform: 'scale(0) rotate(-180deg)' })
-          ),
-          query(':self', [
-            style({ opacity: 0 }),
-            animate(ani, style({ opacity: 1 })),
-          ]),
-          query('.modal-box', animate(ani, style({ transform: 'scale(1)' }))),
-        ]),
-        query('.modal-box h1', animate(ani, style({ transform: 'scale(1)' }))),
-        query(
-          'app-stars app-star',
-          stagger(
-            '0.3s',
-            animate(ani, style({ transform: 'scale(1) rotate(0deg)' }))
-          )
-        ),
-      ]),
-      transition(':leave', [
-        group([
-          query('.modal-box', animate(ani, style({ transform: 'scale(0)' }))),
-          query(':self', [
-            style({ opacity: 1 }),
-            animate(ani, style({ opacity: 0 })),
-          ]),
-        ]),
-      ]),
-    ]),
   ],
 })
 export class GameEndedComponent {

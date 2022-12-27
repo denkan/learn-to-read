@@ -20,8 +20,8 @@ import { SubGame } from '../game.types';
         </div>
         <footer class="p-1 text-center">
           <button mat-raised-button color="primary" (click)="close.emit()">
-            <span *ngIf="!nextSubGame">Next</span>
-            <span *ngIf="nextSubGame">Close</span>
+            <span *ngIf="nextSubGame">Next</span>
+            <span *ngIf="!nextSubGame">Close</span>
           </button>
         </footer>
       </div>

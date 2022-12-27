@@ -12,9 +12,13 @@ import { SubGameInfo, SubGameType } from './game.types';
       <ng-container [ngSwitch]="gi.subGame.curr.type">
         <app-map-lower-upper-words
           *ngSwitchCase="SubGameType.MapLowerToUpper"
+          [gameInfo]="gi"
+          (patch)="game.patchSubGame($event)"
         ></app-map-lower-upper-words>
         <app-map-lower-upper-words
           *ngSwitchCase="SubGameType.MapUpperToLower"
+          [gameInfo]="gi"
+          (patch)="game.patchSubGame($event)"
           [inversed]="true"
         ></app-map-lower-upper-words>
       </ng-container>

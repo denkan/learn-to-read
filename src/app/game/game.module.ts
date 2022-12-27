@@ -8,7 +8,7 @@ import { GameEndedComponent } from './game-ended/game-ended.component';
 import { GameComponent } from './game.component';
 import { CreateGameGuard, RequireGameGuard } from './game.guards';
 import { GameService } from './game.service';
-import { MapLowerUpperWordsComponent } from './map-lower-upper-words/map-lower-upper-words.component';
+import { MapLowerUpperWordsComponent } from './sub-games/map-lower-upper-words/map-lower-upper-words.component';
 import { WordComponent } from './_components/word.component';
 
 const routes: Routes = [

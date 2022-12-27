@@ -1,0 +1,32 @@
+<div cdkDropListGroup class="wrapper full-fill bg-op-5">
+  <main class="flex-center" cdkDropList>
+    <div
+      *ngIf="currWord"
+      class="p-1"
+      cdkDrag
+      [cdkDragData]="currWord"
+      (cdkDragDropped)="onDragDrop($event)"
+    >
+      <app-word
+        bgcolor="var(--color-primary-light-2)"
+        innerClass="px-1 ts-120p"
+      >
+        {{ formatWord(currWord, true) }}
+      </app-word>
+    </div>
+  </main>
+  <aside>
+    <div
+      *ngFor="let word of gameInfo?.wordset?.words || []; trackBy: trackByValue"
+      cdkDropList
+      [cdkDropListDisabled]="wordsDone.includes(word)"
+      [cdkDropListData]="word"
+      (cdkDropListEntered)="onDragEnter($event)"
+      (cdkDropListExited)="resetUI()"
+    >
+      <app-word [state]="wordState(word)">
+        {{ formatWord(word, false) }}
+      </app-word>
+    </div>
+  </aside>
+</div>

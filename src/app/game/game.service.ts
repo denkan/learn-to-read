@@ -6,13 +6,14 @@ import {
   filter,
   map,
 } from 'rxjs';
+import { SpeechService } from '../core/speech.service';
 import { StoreService } from '../core/store.service';
 import { isEqualJSON } from '../shared/utils/misc.utils';
 import { Game, GameInfo, SubGame, SubGameType } from './game.types';
 
 @Injectable()
 export class GameService {
-  constructor(private store: StoreService) {}
+  constructor(private store: StoreService, private speech: SpeechService) {}
 
   readonly game$ = new BehaviorSubject<Game | null>(null);
   readonly wordsetId$ = this.game$.pipe(map((game) => game?.wordsetId));
@@ -71,6 +72,7 @@ export class GameService {
     };
     this.game$.next(game);
     this._subGameIndex$.next(0);
+
     return game;
   }
 

@@ -9,6 +9,7 @@ import { GameComponent } from './game.component';
 import { CreateGameGuard, RequireGameGuard } from './game.guards';
 import { GameService } from './game.service';
 import { MapLowerUpperWordsComponent } from './sub-games/map-lower-upper-words/map-lower-upper-words.component';
+import { SpeechLockComponent } from './_components/speech-lock.component';
 import { WordComponent } from './_components/word.component';
 
 const routes: Routes = [
@@ -35,6 +36,7 @@ const routes: Routes = [
   declarations: [
     GameComponent,
     WordComponent,
+    SpeechLockComponent,
     GameEndedComponent,
     MapLowerUpperWordsComponent,
   ],

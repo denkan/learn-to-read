@@ -1,18 +1,29 @@
 <div cdkDropListGroup class="wrapper full-fill bg-op-5">
-  <main class="flex-center" cdkDropList>
-    <div
-      *ngIf="currWord"
-      class="p-1"
-      cdkDrag
-      [cdkDragData]="currWord"
-      (cdkDragDropped)="onDragDrop($event)"
-    >
-      <app-word
-        bgcolor="var(--color-primary-light-2)"
-        innerClass="px-1 ts-120p"
+  <main
+    class="flex-center"
+    cdkDropList
+    (dblclick)="useSpeechLock = !useSpeechLock"
+  >
+    <div *ngIf="currWord" class="p-1">
+      <app-speech-lock
+        [word]="currWord"
+        (lockedChanged)="isCurrWordLocked = $event"
+        [disabled]="!useSpeechLock"
+        #lockBox
       >
-        {{ formatWord(currWord, true) }}
-      </app-word>
+        <app-word
+          bgcolor="var(--color-primary-light-2)"
+          innerClass="px-1 ts-120p"
+          cdkDrag
+          [cdkDragData]="currWord"
+          (cdkDragDropped)="onDragDrop($event)"
+          [cdkDragBoundary]="
+            useSpeechLock && isCurrWordLocked ? 'app-speech-lock' : ''
+          "
+        >
+          {{ formatWord(currWord, true) }}
+        </app-word>
+      </app-speech-lock>
     </div>
   </main>
   <aside>

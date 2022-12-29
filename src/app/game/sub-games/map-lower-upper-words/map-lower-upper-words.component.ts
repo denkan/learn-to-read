@@ -16,8 +16,11 @@ export class MapLowerUpperWordsComponent extends SubGameBase implements OnInit {
     super();
   }
 
+  useSpeechLock = true;
+
   wordsDone: string[] = [];
   currWord?: string;
+  isCurrWordLocked = true;
   wrongWord?: string;
   hoverWord?: string;
   wrongMoves: { from: string; to: string }[] = [];
@@ -55,7 +58,11 @@ export class MapLowerUpperWordsComponent extends SubGameBase implements OnInit {
     this.patch.emit({ scoreRatio, endedAt });
   }
 
-  randomWord() {
+  async randomWord() {
+    // set to blank real quick to re-render UI
+    this.currWord = undefined;
+    await new Promise((r) => setTimeout(r, 100));
+    // ranomize new word
     const { wordsLeft } = this.getStats();
     const i = Math.floor(Math.random() * wordsLeft.length);
     this.currWord = wordsLeft[i];
@@ -115,13 +122,11 @@ export class MapLowerUpperWordsComponent extends SubGameBase implements OnInit {
   }
 
   confettiByEvent(e: MouseEvent | TouchEvent) {
-    const { clientX, clientY } =
+    const { clientX: x, clientY: y } =
       (e as TouchEvent).changedTouches?.[0] || (e as MouseEvent);
-    const { innerWidth, innerHeight } = e.view!;
-    const x = clientX / innerWidth;
-    const y = clientY / innerHeight;
+    const origin = this.confetti.getOriginByCoord({ x, y });
     this.confetti.run({
-      origin: { x, y },
+      origin,
       particleCount: 12,
       spread: 70,
       startVelocity: 15,

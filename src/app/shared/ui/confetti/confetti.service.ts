@@ -23,4 +23,11 @@ export class ConfettiService {
   runDelay(delayInMs: number = 0, opts?: Partial<confetti.Options>) {
     return setTimeout(() => this.run(opts), delayInMs ?? 0);
   }
+
+  getOriginByCoord({ x = 0, y = 0 }) {
+    return {
+      x: x / window.innerWidth,
+      y: y / window.innerHeight,
+    };
+  }
 }

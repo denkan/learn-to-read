@@ -19,11 +19,15 @@
     @media (orientation: portrait) {
       grid-template: auto / repeat(2, calc(50% - 0.25em));
     }
+
+    .cdk-drag-placeholder {
+      display: none;
+    }
   }
 }
 
 .cdk-drag-placeholder {
-  display: none;
+  opacity: 0;
 }
 .cdk-drag-animating {
   // reset bug!!

@@ -194,7 +194,7 @@ export class SpeechLockComponent implements OnChanges, OnInit, OnDestroy {
   ngOnInit() {
     this.locked$
       .pipe(untilDestroyed(this))
-      .subscribe((locked) => this.lockedChanged.emit(locked));
+      .subscribe((locked) => this.lockedChanged.emit(locked && !this.disabled));
 
     if (!this.disabled) {
       this.start();

@@ -17,9 +17,7 @@
           cdkDrag
           [cdkDragData]="currWord"
           (cdkDragDropped)="onDragDrop($event)"
-          [cdkDragBoundary]="
-            useSpeechLock && isCurrWordLocked ? 'app-speech-lock' : ''
-          "
+          [cdkDragBoundary]="isCurrWordLocked ? 'app-speech-lock' : ''"
         >
           {{ formatWord(currWord, true) }}
         </app-word>
@@ -35,7 +33,7 @@
       (cdkDropListEntered)="onDragEnter($event)"
       (cdkDropListExited)="resetUI()"
     >
-      <app-word [state]="wordState(word)" (click)="onWordChosen(word)">
+      <app-word [state]="wordState(word)" (click)="onWordChosen(word, $event)">
         {{ formatWord(word, false) }}
       </app-word>
     </div>

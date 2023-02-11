@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { MaterialModule } from '../shared/material/material.module';
+import { AudioVisualizerModule } from '../shared/ui/audio-visualizer/audio-visualizer.module';
 import { ConfettiModule } from '../shared/ui/confetti/confetti.module';
 import { StarsModule } from '../shared/ui/stars';
 import { GameEndedComponent } from './game-ended/game-ended.component';
@@ -32,6 +33,7 @@ const routes: Routes = [
     MaterialModule,
     StarsModule,
     ConfettiModule,
+    AudioVisualizerModule,
   ],
   declarations: [
     GameComponent,

@@ -12,7 +12,14 @@ import {
   ViewChild,
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { BehaviorSubject, filter, first, map } from 'rxjs';
+import {
+  BehaviorSubject,
+  filter,
+  first,
+  map,
+  pairwise,
+  throttleTime,
+} from 'rxjs';
 import { SpeechService } from 'src/app/core/speech.service';
 import { ConfettiService } from 'src/app/shared/ui/confetti/confetti.service';
 
@@ -24,11 +31,20 @@ import { ConfettiService } from 'src/app/shared/ui/confetti/confetti.service';
       <ng-content></ng-content>
     </div>
     <ng-container *ngIf="!disabled">
-      <div class="box">
-        <span class="icon" #iconRef>
-          <mat-icon>{{ locked ? 'lock' : 'mood' }}</mat-icon>
-        </span>
-      </div>
+      <ng-container *ngIf="shakePos$ | async as shake">
+        <div
+          class="box"
+          [style.--shake-x]="shake.x"
+          [style.--shake-y]="shake.y"
+        >
+          <span class="icon" #iconRef>
+            <mat-icon>{{ locked ? 'lock' : 'mood' }}</mat-icon>
+          </span>
+          <app-audio-visualizer
+            [audioData]="audioData$ | async"
+          ></app-audio-visualizer>
+        </div>
+      </ng-container>
     </ng-container>
   `,
   styles: [
@@ -57,7 +73,7 @@ import { ConfettiService } from 'src/app/shared/ui/confetti/confetti.service';
             width: 2em;
             height: 2em;
             position: absolute;
-            z-index: 3;
+            z-index: 4;
             left: 50%;
             bottom: 0;
             transform: translate(-50%, 50%);
@@ -67,13 +83,35 @@ import { ConfettiService } from 'src/app/shared/ui/confetti/confetti.service';
               font-size: 125%;
             }
           }
+          app-audio-visualizer {
+            display: none;
+            width: calc(100% - 1em);
+            height: 2em;
+            position: absolute;
+            bottom: -2px;
+            left: 50%;
+            transform: translate(-50%, 50%);
+            z-index: 3;
+          }
         }
 
         &.locked .box {
           animation: none;
         }
-        &.listening .icon {
-          animation: 1s listening ease-in-out infinite;
+        &.listening {
+          .box {
+            .icon {
+              animation: 1s listening ease-in-out infinite;
+              transition: 0.1s;
+              transform: translate(
+                calc(-50% + (var(--shake-x) * 0.2em)),
+                calc(50% + (var(--shake-y) * 0.2em))
+              );
+            }
+            app-audio-visualizer {
+              display: inline-block;
+            }
+          }
         }
       }
 
@@ -115,6 +153,22 @@ export class SpeechLockComponent implements OnChanges, OnInit, OnDestroy {
   private _locked$ = new BehaviorSubject<boolean>(true);
   readonly locked$ = this._locked$.asObservable();
 
+  readonly shakePos$ = this.speech.audioSignal$.pipe(
+    throttleTime(50),
+    pairwise(),
+    map(([n1, n2]) => {
+      const randomNegative = (n: number) =>
+        (Math.round(Math.random()) ? -1 : 1) * n;
+      const x = randomNegative(n1.diff);
+      const y = randomNegative(n2.diff);
+      return { x, y };
+    })
+  );
+  readonly audioData$ = this.speech.audioSignal$.pipe(
+    filter((x) => !!x),
+    map((x) => x.data)
+  );
+
   @HostBinding('class.locked')
   get locked() {
     return this._locked$.value;
@@ -153,11 +207,12 @@ export class SpeechLockComponent implements OnChanges, OnInit, OnDestroy {
     this.stop();
   }
 
-  start() {
+  async start() {
     this._locked$.next(true);
 
-    const { words$ } = this.speech.start();
+    const { words$ } = await this.speech.start();
     const correctWord$ = words$.pipe(
+      untilDestroyed(this),
       filter((words) => !!(this.word && words?.length)),
       map((words) =>
         words.find(

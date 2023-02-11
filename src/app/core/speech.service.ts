@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 
 export interface SpeechRecognitionOptions {
   continuous: boolean;
@@ -26,7 +26,9 @@ const SpeechRecognition =
 
 @Injectable({ providedIn: 'root' })
 export class SpeechService {
-  private _recognition: SpeechRecognition = new SpeechRecognition();
+  audioContext = new AudioContext();
+  audioStream?: MediaStream;
+  recognition: SpeechRecognition = new SpeechRecognition();
 
   private _status$ = new BehaviorSubject<SpeechStatus>('detecting');
   readonly status$ = this._status$.asObservable();
@@ -40,9 +42,33 @@ export class SpeechService {
     return this._words$.value;
   }
 
-  private _stopped$ = new Subject<void>();
+  private _audioSignal$ = new BehaviorSubject<{
+    diff: number;
+    data: Uint8Array;
+  }>({ diff: 0, data: Uint8Array.of(0) });
+  readonly audioSignal$ = this._audioSignal$.asObservable();
+  get audioSignal() {
+    return this._audioSignal$.value;
+  }
 
-  start(options?: SpeechRecognitionOptions) {
+  async enableMicrophone() {
+    try {
+      this.audioStream = await navigator.mediaDevices.getUserMedia({
+        audio: true,
+      });
+      await new Promise((r) => setTimeout(r, 100));
+      this.trackVoiceSignals();
+      return true;
+    } catch (err) {
+      console.warn(err);
+      this._status$.next('not-allowed');
+      return false;
+    }
+  }
+
+  async start(options?: SpeechRecognitionOptions) {
+    await this.enableMicrophone();
+
     const defaultOptions: SpeechRecognitionOptions = {
       continuous: true,
       // lang: 'en-US',
@@ -55,10 +81,10 @@ export class SpeechService {
 
     this._words$.next([]);
 
-    this._recognition = new SpeechRecognition();
-    Object.assign(this._recognition, defaultOptions, options || {});
+    this.recognition = new SpeechRecognition();
+    Object.assign(this.recognition, defaultOptions, options || {});
 
-    this._recognition.addEventListener('result', (e: any) => {
+    this.recognition.addEventListener('result', (e: any) => {
       const words: string[] = [];
       for (const r of e.results) {
         for (const w of r) {
@@ -68,27 +94,67 @@ export class SpeechService {
       }
       this._words$.next(words);
     });
-    this._recognition.addEventListener(
+    this.recognition.addEventListener(
       'error',
       (e: Event & { error?: string }) =>
         this._status$.next(e.error === 'not-allowed' ? 'not-allowed' : 'error')
     );
-    this._recognition.addEventListener('start', () =>
+    this.recognition.addEventListener('start', () =>
       this._status$.next('started')
     );
-    this._recognition.addEventListener('end', () =>
+    this.recognition.addEventListener('end', () =>
       this._status$.next('stopped')
     );
 
-    this._recognition.start();
+    this.recognition.start();
     return { words$: this.words$ };
   }
 
   stop() {
-    if (this._recognition && typeof this._recognition.stop === 'function') {
-      this._recognition.stop();
+    if (this.recognition && typeof this.recognition.stop === 'function') {
+      this.recognition.stop();
     } else {
       this._status$.next('stopped');
     }
+  }
+
+  trackVoiceSignals(source = this.audioStream, context = this.audioContext) {
+    if (!source || !context) return;
+
+    const src = context.createMediaStreamSource(source);
+    var analyser = context.createAnalyser();
+    var listen = context.createGain();
+
+    src.connect(listen);
+    listen.connect(analyser);
+    analyser.fftSize = 2 ** 12;
+
+    // -- calcSignal() start
+    const calcSignal = () => {
+      requestAnimationFrame(calcSignal);
+      // setTimeout(calcSignal, 300);
+
+      const bufferLength = analyser.frequencyBinCount;
+      const dataArray = new Uint8Array(bufferLength);
+
+      analyser.smoothingTimeConstant = 0.5;
+      listen.gain.setValueAtTime(1, context.currentTime);
+
+      analyser.getByteFrequencyData(dataArray);
+      analyser.getByteTimeDomainData(dataArray);
+
+      let min = 1;
+      let max = 0;
+      for (var i = 0; i < bufferLength; i++) {
+        var v = dataArray[i] / 128.0;
+        min = Math.min(min, v);
+        max = Math.max(min, v);
+      }
+      const diff = max - min;
+      this._audioSignal$.next({ diff, data: dataArray });
+    };
+    // -- trackSignal() end
+
+    calcSignal();
   }
 }

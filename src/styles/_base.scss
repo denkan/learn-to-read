@@ -11,6 +11,7 @@ body {
   height: 100%;
   margin: 0;
   font-family: $font-family-base;
+  overscroll-behavior-y: none;
 }
 html {
   font-size: 3vw; // landscape

@@ -1,0 +1,26 @@
+{
+  "WORDSETFORM": {
+    "HEADLINE": {
+      "NEW": "Create new word set",
+      "EDIT": "Edit word set"
+    },
+    "LABELS": {
+      "TITLE": "Title",
+      "WORDSTOLEARN": "Words to learn",
+      "ADDWORD": "Add word...",
+      "REMOVEWORD": "Remove \"{{word}}\"",
+      "DELETEWORDSET": "Delete word set (can't be undone)"
+    },
+    "BUTTON": {
+      "NEW": "Create",
+      "EDIT": "Save",
+      "DELETE": "Delete"
+    }
+  },
+  "COMMON": {
+    "CLOSE": "Close",
+    "NEXT": "Next",
+    "EDIT": "Edit",
+    "NICEJOB": "Nice job!"
+  }
+}

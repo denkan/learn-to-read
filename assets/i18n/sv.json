@@ -1,0 +1,27 @@
+{
+  "WORDSETFORM": {
+    "HEADLINE": {
+      "NEW": "Skapa ny ordlista",
+      "EDIT": "Redigera ordlista"
+    },
+    "LABELS": {
+      "TITLE": "Titel",
+      "WORDSTOLEARN": "Ord att öva på",
+      "ADDWORD": "Nytt ord...",
+      "REMOVEWORD": "Ta bort \"{{word}}\"",
+      "DELETEWORDSET": "Radera ordlista (går ej att ångra)"
+    },
+    "BUTTON": {
+      "NEW": "Skapa",
+      "EDIT": "Spara",
+      "DELETE": "Radera"
+    }
+  },
+  "COMMON": {
+    "LANGUAGE": "Svenska",
+    "CLOSE": "Stäng",
+    "NEXT": "Nästa",
+    "EDIT": "Redigera",
+    "NICEJOB": "Bra jobbat!"
+  }
+}

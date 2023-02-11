@@ -28,11 +28,13 @@ export class HomeComponent {
 
   readonly $$ = combineLatest([
     this.wordsetsSorted$,
+    this.store.language$,
     this.isEditMode$,
     this.layout.isPortrait$,
   ]).pipe(
-    map(([wordSets, isEditMode, isPortrait]) => ({
+    map(([wordSets, language, isEditMode, isPortrait]) => ({
       wordSets,
+      language,
       isEditMode,
       isPortrait,
     }))

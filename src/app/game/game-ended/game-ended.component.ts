@@ -7,7 +7,7 @@ import { SubGame } from '../game.types';
     <div *ngIf="show" class="modal-wrapper fadeIn">
       <div class="modal-box scaleUp" [confetti]="{ delay: 2000 }">
         <header class="p-1 text-center">
-          <h1 class="m-0 scaleUp">Nice job!</h1>
+          <h1 class="m-0 scaleUp" translate>COMMON.NICEJOB</h1>
         </header>
         <div class="px-1 flex-center">
           <div class="ts-300p lh-80">
@@ -20,8 +20,8 @@ import { SubGame } from '../game.types';
         </div>
         <footer class="p-1 text-center">
           <button mat-raised-button color="primary" (click)="close.emit()">
-            <span *ngIf="nextSubGame">Next</span>
-            <span *ngIf="!nextSubGame">Close</span>
+            <span *ngIf="nextSubGame" translate>COMMON.NEXT</span>
+            <span *ngIf="!nextSubGame" translate>COMMON.CLOSE</span>
           </button>
         </footer>
       </div>

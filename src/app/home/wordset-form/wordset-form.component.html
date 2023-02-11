@@ -1,30 +1,37 @@
 <div class="modal-wrapper">
   <form class="modal-box w-100" [formGroup]="form" (ngSubmit)="onSubmit()">
     <div class="px-1 py-05">
-      <h1 class="ts-150p flex-center m-0">
-        {{ isEditing ? "Edit word set" : "Create new word set" }}
+      <h1 class="ts-150p flex-center m-0" translate>
+        {{ "WORDSETFORM.HEADLINE." + (isEditing ? "EDIT" : "NEW") }}
       </h1>
     </div>
     <div class="modal-body p-1">
       <mat-form-field appearance="outline" class="w-100 ts-120p">
-        <mat-label>Title</mat-label>
+        <mat-label translate>WORDSETFORM.LABELS.TITLE</mat-label>
         <input matInput formControlName="title" autofocus />
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="w-100 ts-120p">
-        <mat-label>Words to learn</mat-label>
-        <mat-chip-grid #chipGrid aria-label="Enter words">
+        <mat-label>
+          {{ "WORDSETFORM.LABELS.WORDSTOLEARN" | translate }}*
+        </mat-label>
+        <mat-chip-grid #chipGrid aria-label="WORDSETFORM.LABELS.ADDWORD">
           <mat-chip-row
             *ngFor="let word of form.value.words"
             (removed)="removeWord(word)"
           >
             {{ word }}
-            <button matChipRemove [attr.aria-label]="'remove ' + word">
+            <button
+              matChipRemove
+              [attr.aria-label]="
+                'WORDSETFORM.LABELS.REMOVEWORD' | translate : { word }
+              "
+            >
               <mat-icon>cancel</mat-icon>
             </button>
           </mat-chip-row>
           <input
-            placeholder="Add word..."
+            [placeholder]="'WORDSETFORM.LABELS.ADDWORD' | translate"
             class="word-input"
             [matChipInputFor]="chipGrid"
             [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
@@ -40,7 +47,7 @@
         color="warn"
         class="ts-80p"
       >
-        Delete this word set (can't be undone)
+        {{ "WORDSETFORM.LABELS.DELETEWORDSET" | translate }}
       </mat-checkbox>
     </div>
 
@@ -55,11 +62,19 @@
           class=""
         >
           <strong class="text-upper">
-            {{ form.value.delete ? "Delete" : isEditing ? "Save" : "Create" }}
+            {{
+              "WORDSETFORM.BUTTON." +
+                (form.value.delete ? "DELETE" : isEditing ? "EDIT" : "NEW")
+                | translate
+            }}
           </strong>
         </button>
       </div>
     </footer>
-    <a (click)="location.back()" class="modal-close"></a>
+    <a
+      (click)="location.back()"
+      class="modal-close"
+      [attr.aria-label]="'COMMON.CLOSE' | translate"
+    ></a>
   </form>
 </div>

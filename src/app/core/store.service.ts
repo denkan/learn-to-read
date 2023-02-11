@@ -3,6 +3,7 @@ import { BehaviorSubject, debounceTime, map } from 'rxjs';
 
 export interface Store {
   wordSets: WordSet[];
+  language: string;
 }
 
 export interface WordSet {
@@ -15,6 +16,7 @@ export interface WordSet {
 export class StoreService {
   readonly data$ = new BehaviorSubject<Store>({
     wordSets: [],
+    language: 'sv',
   });
 
   constructor() {
@@ -27,6 +29,7 @@ export class StoreService {
   }
 
   readonly wordSets$ = this.data$.pipe(map((data) => data.wordSets));
+  readonly language$ = this.data$.pipe(map((data) => data.language));
 
   patch(partialData: Partial<Store>) {
     const newData = { ...this.data$.value, ...(partialData || {}) };

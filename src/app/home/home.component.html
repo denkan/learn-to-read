@@ -1,53 +1,60 @@
-<div
-  *ngIf="$$ | async as $"
-  class="wrapper full-fill overflow-auto bg-op-5"
-  [class.edit-mode]="$.isEditMode"
-  [class.disable-click]="clickDisabled"
-  (click)="$.isEditMode && setEditMode(false)"
->
+<ng-container *ngIf="$$ | async as $">
   <div
-    class="box-list"
-    cdkDropList
-    [cdkDropListDisabled]="!$.isEditMode"
-    [cdkDropListData]="$.wordSets"
-    (cdkDropListDropped)="onBoxSortDrop($event)"
-    [cdkDropListOrientation]="$.isPortrait ? 'vertical' : 'horizontal'"
+    class="wrapper full-fill overflow-auto bg-op-5"
+    [class.edit-mode]="$.isEditMode"
+    [class.disable-click]="clickDisabled"
+    (click)="$.isEditMode && setEditMode(false)"
   >
-    <div class="box-wrapper">
-      <div
-        class="box new"
-        matRipple
-        [matRippleDisabled]="$.isEditMode"
-        (click)="gotoLink('new', $.isEditMode)"
-      >
-        <b>+</b>
-      </div>
-    </div>
     <div
-      class="box-wrapper"
-      *ngFor="let ws of $.wordSets; let index = index"
-      cdkDrag
+      class="box-list"
+      cdkDropList
+      [cdkDropListDisabled]="!$.isEditMode"
+      [cdkDropListData]="$.wordSets"
+      (cdkDropListDropped)="onBoxSortDrop($event)"
+      [cdkDropListOrientation]="$.isPortrait ? 'vertical' : 'horizontal'"
     >
-      <div
-        class="box"
-        matRipple
-        [matRippleDisabled]="$.isEditMode"
-        (click)="gotoLink(['/game', ws.id, 'new'], $.isEditMode)"
-        (longpress)="setEditMode(true)"
-        (longpressEnd)="enableClick()"
-        [style.animation-delay]="-((index % 4) * 0.2) + 's'"
-      >
-        <b>{{ ws.title }}</b>
+      <div class="box-wrapper">
+        <div
+          class="box new"
+          matRipple
+          [matRippleDisabled]="$.isEditMode"
+          (click)="gotoLink('new', $.isEditMode)"
+        >
+          <b>+</b>
+        </div>
       </div>
-      <a
-        class="edit link"
-        [class.show]="$.isEditMode"
-        (click)="gotoLink(['edit', ws.id], !$.isEditMode)"
+      <div
+        class="box-wrapper"
+        *ngFor="let ws of $.wordSets; let index = index"
+        cdkDrag
       >
-        <mat-icon>edit</mat-icon>
-      </a>
+        <div
+          class="box"
+          matRipple
+          [matRippleDisabled]="$.isEditMode"
+          (click)="gotoLink(['/game', ws.id, 'new'], $.isEditMode)"
+          (longpress)="setEditMode(true)"
+          (longpressEnd)="enableClick()"
+          [style.animation-delay]="-((index % 4) * 0.2) + 's'"
+        >
+          <b>{{ ws.title }}</b>
+        </div>
+        <a
+          class="edit link"
+          [class.show]="$.isEditMode"
+          (click)="gotoLink(['edit', ws.id], !$.isEditMode)"
+        >
+          <mat-icon>edit</mat-icon>
+        </a>
+      </div>
     </div>
   </div>
-</div>
+
+  <app-language-selector
+    class="ts-50p"
+    [current]="$.language"
+    (change)="store.patch({ language: $event })"
+  ></app-language-selector>
+</ng-container>
 
 <router-outlet></router-outlet>

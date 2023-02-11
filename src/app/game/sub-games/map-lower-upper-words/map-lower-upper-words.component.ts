@@ -83,18 +83,21 @@ export class MapLowerUpperWordsComponent extends SubGameBase implements OnInit {
     this.wrongWord = undefined;
   }
 
-  private _aniTimer?: NodeJS.Timeout;
-  async onDragDrop(e: CdkDragDrop<string, string, string>) {
-    const from = e.item.data;
-    const to = e.container.data;
+  onWordChosen(chosenWord: string, event?: MouseEvent | TouchEvent) {
+    const from = this.currWord;
+    const to = chosenWord;
+    if (!from || this.isCurrWordLocked) {
+      return;
+    }
+    const { wordsLeft } = this.getStats();
     const isCorrectWord = from === to;
     if (isCorrectWord) {
       this.wordsDone.push(from);
       this.randomWord();
-      this.confettiByEvent(e.event);
+      this.confettiByEvent(event);
     } else {
       this.resetUI();
-      if (to && !e.container.disabled) {
+      if (to && wordsLeft.includes(to)) {
         this.wrongMoves.push({ from, to });
         this.wrongWord = to;
         clearTimeout(this._aniTimer);
@@ -102,6 +105,11 @@ export class MapLowerUpperWordsComponent extends SubGameBase implements OnInit {
       }
     }
     this.sendStats();
+  }
+
+  private _aniTimer?: NodeJS.Timeout;
+  async onDragDrop(e: CdkDragDrop<string, string, string>) {
+    this.onWordChosen(e.container.data, e.event);
   }
   onDragEnter(e: CdkDragEnter<string>) {
     this.resetUI();
@@ -121,7 +129,10 @@ export class MapLowerUpperWordsComponent extends SubGameBase implements OnInit {
     return WordState.Idle;
   }
 
-  confettiByEvent(e: MouseEvent | TouchEvent) {
+  confettiByEvent(e?: MouseEvent | TouchEvent) {
+    if (!e) {
+      return;
+    }
     const { clientX: x, clientY: y } =
       (e as TouchEvent).changedTouches?.[0] || (e as MouseEvent);
     const origin = this.confetti.getOriginByCoord({ x, y });

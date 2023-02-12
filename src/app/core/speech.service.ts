@@ -82,7 +82,6 @@ export class SpeechService {
       interimResults: true,
       maxAlternatives: 5,
     };
-    console.log(defaultOptions);
 
     this.stop();
 

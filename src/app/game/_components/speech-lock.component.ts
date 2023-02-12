@@ -14,6 +14,7 @@ import {
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
   BehaviorSubject,
+  combineLatest,
   filter,
   first,
   map,
@@ -151,7 +152,7 @@ export class SpeechLockComponent implements OnChanges, OnInit, OnDestroy {
 
   @ViewChild('iconRef') iconRef?: ElementRef<HTMLSpanElement>;
 
-  private _locked$ = new BehaviorSubject<boolean>(true);
+  private _locked$ = new BehaviorSubject<boolean>(false);
   readonly locked$ = this._locked$.asObservable();
 
   readonly shakePos$ = this.speech.audioSignal$.pipe(
@@ -172,7 +173,7 @@ export class SpeechLockComponent implements OnChanges, OnInit, OnDestroy {
 
   @HostBinding('class.locked')
   get locked() {
-    return this._locked$.value;
+    return this._locked$.value && this.isListening;
   }
 
   @HostBinding('class.listening')
@@ -193,9 +194,12 @@ export class SpeechLockComponent implements OnChanges, OnInit, OnDestroy {
 
   private _initted = false;
   ngOnInit() {
-    this.locked$
+    combineLatest([this.locked$, this.speech.status$])
       .pipe(untilDestroyed(this))
-      .subscribe((locked) => this.lockedChanged.emit(locked && !this.disabled));
+      .subscribe(([locked, status]) => {
+        const isLocked = locked && status === 'started' && !this.disabled;
+        this.lockedChanged.emit(isLocked);
+      });
 
     if (!this.disabled) {
       this.start();

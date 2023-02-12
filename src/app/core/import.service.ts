@@ -32,7 +32,6 @@ export class ImportService {
     const jsonAsBase64 = window.btoa(json);
     const url = new URL(window.location.origin);
     url.searchParams.append('in', jsonAsBase64);
-    console.log(url.toString());
     return url.toString();
   }
 }

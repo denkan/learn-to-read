@@ -47,7 +47,6 @@ export class WordsetFormComponent {
       const isValid = !!(fv.id && this.form.valid);
       const ws = { ...fv };
       delete ws.delete;
-      console.log({ isValid, ws });
       return isValid
         ? this.importService.getWordsetsImportUrl([ws as WordSet])
         : undefined;

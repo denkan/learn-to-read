@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject } from 'rxjs';
 
 export interface SpeechRecognitionOptions {
@@ -29,6 +30,8 @@ export class SpeechService {
   audioContext = new AudioContext();
   audioStream?: MediaStream;
   recognition?: SpeechRecognition;
+
+  constructor(private translate: TranslateService) {}
 
   get isSupported() {
     return !!SpeechRecognition;
@@ -75,11 +78,11 @@ export class SpeechService {
 
     const defaultOptions: SpeechRecognitionOptions = {
       continuous: true,
-      // lang: 'en-US',
-      lang: 'sv-SE',
+      lang: this.translate.instant('SPEECHCODE'), // 'sv-SE' / 'en-US'
       interimResults: true,
       maxAlternatives: 5,
     };
+    console.log(defaultOptions);
 
     this.stop();
 

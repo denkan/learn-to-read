@@ -28,7 +28,11 @@ const SpeechRecognition =
 export class SpeechService {
   audioContext = new AudioContext();
   audioStream?: MediaStream;
-  recognition: SpeechRecognition = new SpeechRecognition();
+  recognition?: SpeechRecognition;
+
+  get isSupported() {
+    return !!SpeechRecognition;
+  }
 
   private _status$ = new BehaviorSubject<SpeechStatus>('detecting');
   readonly status$ = this._status$.asObservable();
@@ -82,9 +86,10 @@ export class SpeechService {
     this._words$.next([]);
 
     this.recognition = new SpeechRecognition();
-    Object.assign(this.recognition, defaultOptions, options || {});
+    const recognition = this.recognition!;
+    Object.assign(recognition, defaultOptions, options || {});
 
-    this.recognition.addEventListener('result', (e: any) => {
+    recognition.addEventListener('result', (e: any) => {
       const words: string[] = [];
       for (const r of e.results) {
         for (const w of r) {
@@ -94,25 +99,21 @@ export class SpeechService {
       }
       this._words$.next(words);
     });
-    this.recognition.addEventListener(
-      'error',
-      (e: Event & { error?: string }) =>
-        this._status$.next(e.error === 'not-allowed' ? 'not-allowed' : 'error')
+    recognition.addEventListener('error', (e: Event & { error?: string }) =>
+      this._status$.next(e.error === 'not-allowed' ? 'not-allowed' : 'error')
     );
-    this.recognition.addEventListener('start', () =>
-      this._status$.next('started')
-    );
-    this.recognition.addEventListener('end', () =>
-      this._status$.next('stopped')
-    );
+    recognition.addEventListener('start', () => this._status$.next('started'));
+    recognition.addEventListener('end', () => this._status$.next('stopped'));
 
-    this.recognition.start();
+    recognition.start();
     return { words$: this.words$ };
   }
 
   stop() {
     if (this.recognition && typeof this.recognition.stop === 'function') {
       this.recognition.stop();
+      delete this.audioStream;
+      delete this.recognition;
     } else {
       this._status$.next('stopped');
     }

@@ -209,6 +209,11 @@ export class SpeechLockComponent implements OnChanges, OnInit, OnDestroy {
   }
 
   async start() {
+    if (!this.speech.isSupported) {
+      this._locked$.next(false);
+      return;
+    }
+
     this._locked$.next(true);
 
     const { words$ } = await this.speech.start();

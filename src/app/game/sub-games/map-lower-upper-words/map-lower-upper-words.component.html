@@ -8,6 +8,7 @@
       <app-speech-lock
         [word]="currWord"
         (lockedChanged)="isCurrWordLocked = $event"
+        (iconClick)="lockBox.breakLock()"
         [disabled]="!useSpeechLock"
         #lockBox
       >

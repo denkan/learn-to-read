@@ -37,7 +37,7 @@ import { ConfettiService } from 'src/app/shared/ui/confetti/confetti.service';
           [style.--shake-x]="shake.x"
           [style.--shake-y]="shake.y"
         >
-          <span class="icon" #iconRef>
+          <span class="icon" #iconRef (click)="iconClick.emit()">
             <mat-icon>{{ locked ? 'lock' : 'mood' }}</mat-icon>
           </span>
           <app-audio-visualizer
@@ -142,6 +142,7 @@ export class SpeechLockComponent implements OnChanges, OnInit, OnDestroy {
   @Input() word?: string;
   @Input() disabled = false;
   @Output() lockedChanged = new EventEmitter<boolean>();
+  @Output() iconClick = new EventEmitter<void>();
 
   constructor(
     public speech: SpeechService,

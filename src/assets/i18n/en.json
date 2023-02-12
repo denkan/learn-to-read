@@ -9,6 +9,9 @@
       "WORDSTOLEARN": "Words to learn",
       "ADDWORD": "Add word...",
       "REMOVEWORD": "Remove \"{{word}}\"",
+      "SHARE": "Share word set",
+      "COPYSHARE": "Copy share link",
+      "COPIEDSHARE": "Link copied to clipboard!",
       "DELETEWORDSET": "Delete word set (can't be undone)"
     },
     "BUTTON": {

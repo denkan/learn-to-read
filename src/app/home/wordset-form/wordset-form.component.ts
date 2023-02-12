@@ -1,11 +1,15 @@
+import { Clipboard } from '@angular/cdk/clipboard';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Location } from '@angular/common';
 import { Component } from '@angular/core';
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-import { filter, map, switchMap } from 'rxjs';
-import { StoreService } from '../../core/store.service';
+import { TranslateService } from '@ngx-translate/core';
+import { debounceTime, filter, map, switchMap } from 'rxjs';
+import { ImportService } from 'src/app/core/import.service';
+import { StoreService, WordSet } from '../../core/store.service';
 import { genId } from '../../shared/utils/misc.utils';
 
 @Component({
@@ -17,9 +21,13 @@ export class WordsetFormComponent {
   constructor(
     private fb: FormBuilder,
     private store: StoreService,
+    private importService: ImportService,
     private route: ActivatedRoute,
     private router: Router,
-    public location: Location
+    public location: Location,
+    private translate: TranslateService,
+    private clipboard: Clipboard,
+    private snackbar: MatSnackBar
   ) {
     this.trackEditIndex();
   }
@@ -34,6 +42,18 @@ export class WordsetFormComponent {
     delete: [false],
   });
 
+  readonly shareUrl$ = this.form.valueChanges.pipe(
+    map((fv) => {
+      const isValid = !!(fv.id && this.form.valid);
+      const ws = { ...fv };
+      delete ws.delete;
+      console.log({ isValid, ws });
+      return isValid
+        ? this.importService.getWordsetsImportUrl([ws as WordSet])
+        : undefined;
+    })
+  );
+
   get isEditing() {
     const { id } = this.form.value || {};
     return !!id;
@@ -42,6 +62,7 @@ export class WordsetFormComponent {
   private trackEditIndex() {
     this.route.params
       .pipe(
+        debounceTime(1), // let other obs subscribe before this runs
         map((p) => p?.['id']),
         filter((id) => !!id),
         switchMap((id) =>
@@ -91,6 +112,13 @@ export class WordsetFormComponent {
     }
     this.store.patch({ wordSets });
     this.router.navigate(['../']);
+  }
+
+  copyShareUrl(url: string) {
+    this.clipboard.copy(url);
+    const copyText = this.translate.instant('WORDSETFORM.LABELS.COPIEDSHARE');
+    const sb = this.snackbar.open(copyText);
+    setTimeout(() => sb.dismiss(), 1000);
   }
 }
 

@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { first } from 'rxjs';
+import { filter, first, map } from 'rxjs';
+import { ImportService } from './core/import.service';
 import { StoreService } from './core/store.service';
 
 @Component({
@@ -10,17 +11,28 @@ import { StoreService } from './core/store.service';
 })
 export class AppComponent {
   constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private store: StoreService,
-    private translate: TranslateService
+    route: ActivatedRoute,
+    router: Router,
+    store: StoreService,
+    translate: TranslateService,
+    importService: ImportService
   ) {
     // if ?p=my/path present, try navigate to it
-    this.route.queryParams
+    route.queryParams
       .pipe(first((params) => !!params['p']))
-      .subscribe((params) => this.router.navigateByUrl(params['p']));
+      .subscribe((params) => router.navigateByUrl(params['p']));
 
     // track chosen language
-    this.store.language$.subscribe((lang) => translate.use(lang));
+    store.language$.subscribe((lang) => translate.use(lang));
+
+    // track import data
+    route.queryParams
+      .pipe(
+        map((qs) => qs['in']),
+        filter((x) => !!x)
+      )
+      .subscribe((importData) =>
+        importService.importWordsetsFromJson(importData)
+      );
   }
 }

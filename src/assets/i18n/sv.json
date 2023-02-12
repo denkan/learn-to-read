@@ -9,6 +9,9 @@
       "WORDSTOLEARN": "Ord att öva på",
       "ADDWORD": "Nytt ord...",
       "REMOVEWORD": "Ta bort \"{{word}}\"",
+      "SHARE": "Dela ordlista",
+      "COPYSHARE": "Kopiera delningslänk",
+      "COPIEDSHARE": "Länk kopierad till urklipp!",
       "DELETEWORDSET": "Radera ordlista (går ej att ångra)"
     },
     "BUTTON": {

@@ -1,8 +1,8 @@
 <div class="modal-wrapper">
   <form class="modal-box w-100" [formGroup]="form" (ngSubmit)="onSubmit()">
     <div class="px-1 py-05">
-      <h1 class="ts-150p flex-center m-0" translate>
-        {{ "WORDSETFORM.HEADLINE." + (isEditing ? "EDIT" : "NEW") }}
+      <h1 class="ts-150p flex-center m-0">
+        {{ "WORDSETFORM.HEADLINE." + (isEditing ? "EDIT" : "NEW") | translate }}
       </h1>
     </div>
     <div class="modal-body p-1">
@@ -40,6 +40,29 @@
           />
         </mat-chip-grid>
       </mat-form-field>
+
+      <ng-container *ngIf="shareUrl$ | async as shareUrl">
+        <mat-form-field appearance="outline" class="w-100 ts-120p">
+          <mat-label translate>WORDSETFORM.LABELS.SHARE</mat-label>
+          <input
+            #shareUrlInput
+            matInput
+            [value]="shareUrl"
+            readonly
+            class="ts-50p"
+            (focus)="shareUrlInput.select()"
+          />
+          <button
+            type="button"
+            mat-icon-button
+            matSuffix
+            (click)="copyShareUrl(shareUrl)"
+            [attr.aria-label]="'WORDSETFORM.LABELS.COPYSHARE' | translate"
+          >
+            <mat-icon>content_copy</mat-icon>
+          </button>
+        </mat-form-field>
+      </ng-container>
 
       <mat-checkbox
         *ngIf="isEditing"

@@ -21,7 +21,7 @@ export class ImportService {
       const isValid = ws?.id && ws?.title && ws?.words?.length >= 2;
       const alreadyExists = currWordSets.some((x) => x.id === ws.id);
       if (isValid && !alreadyExists) {
-        newWordSets.unshift(ws);
+        newWordSets.push(ws);
       }
     }
     this.store.patch({ wordSets: newWordSets });

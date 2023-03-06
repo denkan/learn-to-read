@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { debounceTime, filter, first, map } from 'rxjs';
+import { filter, first, map } from 'rxjs';
 import { ImportService } from './core/import.service';
 import { StoreService } from './core/store.service';
 
@@ -29,8 +29,7 @@ export class AppComponent {
     route.queryParams
       .pipe(
         map((qs) => qs['in']),
-        filter((x) => !!x),
-        debounceTime(100)
+        filter((x) => !!x)
       )
       .subscribe((importData) =>
         importService.importWordsetsFromJson(importData)
